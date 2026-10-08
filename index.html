@@ -19,13 +19,14 @@
   <header id="site-header"></header>
 
   <main>
-    <!-- Hero: full photo (wide photo on desktop, tall photo on phones) -->
+    <!-- Hero: background video (photo shows first, and stays if the video can't play) -->
     <section class="hero-bg">
       <div class="hero-bg-media" aria-hidden="true">
         <picture>
           <source media="(max-width: 760px)" srcset="assets/img/hero-phone.jpg">
           <img src="assets/img/hero.jpg" alt="" fetchpriority="high" onerror="this.remove()">
         </picture>
+        <video class="hero-video" data-src="assets/video/kidan72-hero.mp4" data-src-mobile="assets/video/kidan72-hero-mobile.mp4" muted loop playsinline preload="none"></video>
       </div>
       <div class="wrap">
         <div class="hero-copy">

@@ -242,7 +242,7 @@ function buildHeader() {
       <span class="hide-sm">Always Ready.</span>
     </div></div>
     <div class="wrap nav">
-      <a class="brand" href="index.html" aria-label="KIDAN 72 home"><img src="assets/img/kidan72-wordmark.png" alt="KIDAN 72"></a>
+      <a class="brand" href="index.html" aria-label="KIDAN 72 home"><img src="assets/img/kidan72-logo-header.png" alt="KIDAN 72 — Always Ready."></a>
       <ul class="menu" id="menu">
         ${NAV.map(n => `<li><a href="${n.href}"${n.id === page ? ' aria-current="page"' : ""}>${n.label}</a></li>`).join("")}
       </ul>
