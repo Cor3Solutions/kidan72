@@ -1,0 +1,2 @@
+Save product photos here, named by serial number (e.g. K72-WTR-001.jpg).
+See README.txt in the main folder for the full list.
