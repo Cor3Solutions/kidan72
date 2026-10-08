@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KIDAN 72 — Always Ready.</title>
+  <meta name="description" content="KIDAN 72 is a Philippine typhoon and flood preparedness system: a serialised 72-hour Go-Bag, training, family drills and community readiness.">
+  <meta property="og:title" content="KIDAN 72 — Always Ready.">
+  <meta property="og:description" content="KIDAN 72 is a Philippine typhoon and flood preparedness system: a serialised 72-hour Go-Bag, training, family drills and community readiness.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#F5F0E7">
+  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="home">
+  <header id="site-header"></header>
+
+  <main>
+    <!-- Hero: full photo (wide photo on desktop, tall photo on phones) -->
+    <section class="hero-bg">
+      <div class="hero-bg-media" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 760px)" srcset="assets/img/hero-phone.jpg">
+          <img src="assets/img/hero.jpg" alt="" fetchpriority="high" onerror="this.remove()">
+        </picture>
+      </div>
+      <div class="wrap">
+        <div class="hero-copy">
+          <span class="eyebrow">Always Ready</span>
+          <h1>Equip people <span class="accent">before they need it.</span></h1>
+          <p class="lede">Gear, skills and a family plan for the first 72 hours.</p>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="gobag.html">Explore the Go-Bag <span class="arrow">→</span></a>
+            <a class="btn btn-ghost" href="about.html">About</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key figures -->
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat"><b>72<span>H</span></b><small>Self-reliance</small></div>
+        <div class="stat"><b>22</b><small>Serialised items</small></div>
+        <div class="stat"><b>10</b><small>Training modules</small></div>
+        <div class="stat"><b>1</b><small>Standard</small></div>
+      </div>
+    </div>
+
+    <!-- Kit photo -->
+    <section class="section">
+      <div class="wrap">
+        <figure class="photo-banner frame">
+          <img src="assets/img/photo-kit.jpg" alt="The complete KIDAN 72 kit laid out item by item" loading="lazy">
+          <figcaption>
+            <h2>Every essential. One system.</h2>
+            <a class="btn btn-primary" href="gobag.html">See what's inside <span class="arrow">→</span></a>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Bags -->
+    <section class="section sand">
+      <div class="wrap">
+        <div class="section-head split">
+          <div class="stack">
+            <span class="eyebrow">Choose your bag</span>
+            <h2>Three ways to carry it.</h2>
+          </div>
+          <a class="btn btn-ghost" href="gobag.html#items">Individual items</a>
+        </div>
+        <div class="bag-lineup" id="bags"></div>
+      </div>
+    </section>
+
+    <!-- System as photo tiles -->
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head split">
+          <div class="stack">
+            <span class="eyebrow">The system</span>
+            <h2>More than a bag.</h2>
+          </div>
+          <a class="btn btn-ghost" href="system.html">See the full system</a>
+        </div>
+        <div class="tiles">
+          <a class="tile tile-wide" href="training.html"><img src="assets/img/photo-training.jpg" alt="" loading="lazy"><span><em>K72-SYS-04</em>Training</span></a>
+          <a class="tile" href="system.html#family"><img src="assets/img/photo-family.jpg" alt="" loading="lazy"><span><em>K72-SYS-05</em>Family</span></a>
+          <a class="tile" href="system.html#flood"><img src="assets/img/photo-flood.jpg" alt="" loading="lazy"><span><em>K72-SYS-06</em>Flood &amp; Typhoon</span></a>
+          <a class="tile tile-wide" href="system.html#community"><img src="assets/img/photo-community.jpg" alt="" loading="lazy"><span><em>K72-SYS-09</em>Community</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Film -->
+    <section class="section sand">
+      <div class="wrap film-solo">
+        <div class="frame">
+          <video src="assets/video/kidan72-system-film.mp4" poster="assets/img/posters/system-film.jpg" controls playsinline preload="metadata"></video>
+        </div>
+      </div>
+    </section>
+
+    <!-- Approach, in one line -->
+    <section class="section tight">
+      <div class="wrap statement">
+        <p class="old">"Buy this bag."</p>
+        <p class="new">"Here is how you become prepared."</p>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-band">
+      <div class="wrap">
+        <h2>How ready are you?</h2>
+        <a class="btn" href="readiness.html">Take the Readiness Check <span class="arrow">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

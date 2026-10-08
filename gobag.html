@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Go-Bag — KIDAN 72</title>
+  <meta name="description" content="Every item in the KIDAN 72 Go-Bag, each with its own serial number, how-to guide and video.">
+  <meta property="og:title" content="The Go-Bag — KIDAN 72">
+  <meta property="og:description" content="Every item in the KIDAN 72 Go-Bag, each with its own serial number, how-to guide and video.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#F5F0E7">
+  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="gobag">
+  <header id="site-header"></header>
+
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / Go-Bag</nav>
+        <span class="eyebrow">Component 01 · Physical Preparedness Kit</span>
+        <h1>The KIDAN 72 Go-Bag</h1>
+        <p class="lede">Everything for the first 72 hours. Every piece serialised.</p>
+      </div>
+    </section>
+
+    <div class="wrap" style="padding-top:32px"><img class="page-banner frame" src="assets/img/photo-kit.jpg" alt="The complete KIDAN 72 kit laid out" loading="lazy"></div>
+
+    <!-- Bags -->
+    <section class="section tight">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Choose your bag</span>
+          <h2>Three ways to carry KIDAN 72</h2>
+          <p class="lede">Get the full system, or start with one pouch.</p>
+        </div>
+        <div class="bag-lineup" id="bags"></div>
+      </div>
+    </section>
+
+    <!-- Catalog -->
+    <section class="section sand" id="items">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Itemised contents</span>
+          <h2>Individual items</h2>
+          <p class="lede">For refills, replacements and upgrades.</p>
+        </div>
+        <div class="toolbar">
+          <div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
+          <span class="count" id="count"></span>
+        </div>
+        <div class="catalog" id="catalog"></div>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div class="wrap">
+        <h2>Own it. Then learn to use it.</h2>
+        <a class="btn" href="training.html">Go to Training <span class="arrow">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/gobag.js"></script>
+</body>
+</html>

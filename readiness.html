@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Readiness Check — KIDAN 72</title>
+  <meta name="description" content="Seven practical questions to test whether you can use your KIDAN 72 Go-Bag under stress.">
+  <meta property="og:title" content="Readiness Check — KIDAN 72">
+  <meta property="og:description" content="Seven practical questions to test whether you can use your KIDAN 72 Go-Bag under stress.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#F5F0E7">
+  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="readiness">
+  <header id="site-header"></header>
+
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / Readiness Check</nav>
+        <span class="eyebrow">Component 03 · KIDAN Readiness Check</span>
+        <h1>Are you ready, or just equipped?</h1>
+        <p class="lede">Tick only what you have actually practised.</p>
+      </div>
+    </section>
+
+    <section class="section tight">
+      <div class="wrap ready-grid">
+        <div class="checks" id="checks"></div>
+        <aside class="scorecard" aria-live="polite">
+          <span class="serial">Readiness score</span>
+          <div class="pct" id="pct">0%</div>
+          <div class="meter"><i id="meter" style="width:0"></i></div>
+          <div class="status" id="status">Not yet ready</div>
+          <p id="advice" style="color:var(--steel)"></p>
+          <div id="gaps" class="stack"></div>
+          <button class="btn btn-ghost" id="reset" type="button" style="justify-self:start">Reset</button>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/readiness.js"></script>
+</body>
+</html>

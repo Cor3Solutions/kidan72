@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Order — KIDAN 72</title>
+  <meta name="description" content="Review your KIDAN 72 order and send it to us on Messenger.">
+  <meta property="og:title" content="My Order — KIDAN 72">
+  <meta property="og:description" content="Review your KIDAN 72 order and send it to us on Messenger.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#F5F0E7">
+  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="order">
+  <header id="site-header"></header>
+
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="gobag.html">Go-Bag</a> / My Order</nav>
+        <span class="eyebrow">Order list</span>
+        <h1>My Order</h1>
+        <p class="lede">Send us your list. We confirm stock, delivery and payment.</p>
+      </div>
+    </section>
+
+    <section class="section tight">
+      <div class="wrap order-grid">
+        <div id="lines"></div>
+
+        <aside class="summary" id="summary">
+          <span class="serial">Order summary</span>
+          <div id="sum-rows" class="stack" style="gap:6px"></div>
+          <div class="total"><span class="serial">Estimated total</span><b id="sum-total">PHP xx</b></div>
+
+          <form id="details" class="stack" novalidate>
+            <div class="field"><label for="o-name">Full name *</label><input id="o-name" name="name" autocomplete="name" required></div>
+            <div class="field"><label for="o-mobile">Mobile number *</label><input id="o-mobile" name="mobile" type="tel" autocomplete="tel" placeholder="09XX XXX XXXX" required></div>
+            <div class="field"><label for="o-address">Delivery city / address</label><input id="o-address" name="address" autocomplete="street-address"></div>
+            <div class="field"><label for="o-notes">Notes</label><textarea id="o-notes" name="notes" placeholder="Preferred delivery date, pick-up, bulk order for an office or barangay…"></textarea></div>
+            <p class="fineprint" id="form-msg" role="alert"></p>
+            <div class="send" id="send"></div>
+          </form>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section sand">
+      <div class="wrap">
+        <div class="section-head"><span class="eyebrow">How ordering works</span><h2>Four simple steps</h2></div>
+        <div class="steps-how">
+          <div><b>1</b><h4>Build your list</h4><p>Add bags or individual items from the Go-Bag page.</p></div>
+          <div><b>2</b><h4>Send it to us</h4><p>Your list is sent to us on Messenger with your details.</p></div>
+          <div><b>3</b><h4>We confirm</h4><p>We reply with stock, delivery fee and payment details (GCash or bank transfer).</p></div>
+          <div><b>4</b><h4>We deliver</h4><p>Your serialised kit is registered under your name and shipped.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/order.js"></script>
+</body>
+</html>
