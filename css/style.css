@@ -689,3 +689,20 @@ body.no-scroll { overflow: hidden; }
 
 /* Video hero: no photo underneath, video shows from the first moment */
 .hero-bg.has-video { background: #3a3a2c; }
+
+/* Phones: never show the browser's own play button or controls on the hero video */
+.hero-video::-webkit-media-controls,
+.hero-video::-webkit-media-controls-start-playback-button,
+.hero-video::-webkit-media-controls-overlay-play-button { display: none !important; -webkit-appearance: none; }
+.hero-video { pointer-events: none; }
+
+/* Small phones (iPhone SE and similar): keep the header on one line and the hero buttons tidy */
+@media (max-width: 380px) {
+  .nav { flex-wrap: nowrap; gap: 6px; }
+  .topline { font-size: 10.5px; letter-spacing: 1px; }
+  .brand img { height: 38px; }
+  .order-btn { padding: 6px 9px; font-size: 12px; }
+  .menu-toggle { padding: 5px 8px; font-size: 12px; }
+  .hero-bg.has-video .hero-copy h1 { font-size: 36px; }
+  .hero-bg.has-video .hero-copy .btn { padding-inline: 16px; font-size: 14px; letter-spacing: 1px; }
+}

@@ -7,8 +7,11 @@ document.getElementById("bags").innerHTML = KIDAN.bags.map(bagCard).join("");
   var v = document.querySelector(".hero-video");
   if (!v) return;
   v.muted = true;
-  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduce) { v.removeAttribute("autoplay"); v.pause(); return; }
+  v.setAttribute("muted", "");
+  // Older browsers ignore the phone/desktop choice in the HTML, so pick the right file here too
+  var phone = window.matchMedia("(max-width: 760px)").matches;
+  var want = phone ? "kidan72-hero-phone.mp4" : "kidan72-hero.mp4";
+  if (v.currentSrc && v.currentSrc.indexOf(want) === -1) { v.src = "assets/video/" + want; v.load(); }
   function start() { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
   start();
   v.addEventListener("canplay", start, { once: true });
