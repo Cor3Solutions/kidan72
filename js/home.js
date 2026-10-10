@@ -2,18 +2,18 @@
 
 document.getElementById("bags").innerHTML = KIDAN.bags.map(bagCard).join("");
 
-/* Hero background video: loads after the photo, skipped for "reduce motion" and data-saver users */
+/* Hero background video: make sure it starts right away (some phones need a nudge) */
 (function () {
   var v = document.querySelector(".hero-video");
   if (!v) return;
-  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var saver = navigator.connection && navigator.connection.saveData;
-  if (reduce || saver) { v.remove(); return; }
-  v.addEventListener("playing", function () { v.classList.add("is-playing"); });
-  v.addEventListener("error", function () { v.remove(); }, true);
-  var small = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
-  v.src = small ? v.dataset.srcMobile : v.dataset.src;
   v.muted = true;
-  var p = v.play();
-  if (p && p.catch) p.catch(function () { v.remove(); });
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) { v.removeAttribute("autoplay"); v.pause(); return; }
+  function start() { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  start();
+  v.addEventListener("canplay", start, { once: true });
+  // If the browser blocked autoplay (e.g. phone battery saver), start on the first touch or scroll
+  ["touchstart", "click", "scroll"].forEach(function (e) {
+    window.addEventListener(e, function () { if (v.paused) start(); }, { once: true, passive: true });
+  });
 })();

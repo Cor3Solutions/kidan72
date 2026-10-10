@@ -638,46 +638,46 @@ body.no-scroll { overflow: hidden; }
    Home hero — background video
    File: assets/video/kidan72-hero.mp4 (photo shows until it plays)
    ========================================================= */
-.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 65% center; opacity: 0; transition: opacity .8s ease; }
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 65% center; background: #3a3a2c; }
 .hero-video.is-playing { opacity: 1; }
 .hero-video.is-playing ~ picture, .hero-bg-media:has(.hero-video.is-playing) img { animation: none; }
 /* Text sits on moving footage, so the light panel behind it is a little stronger */
-.hero-bg:has(.hero-video.is-playing)::before {
+.hero-bg.has-video::before {
   background:
     linear-gradient(90deg, rgba(245,240,231,.97) 0%, rgba(245,240,231,.93) 36%, rgba(245,240,231,.62) 58%, rgba(245,240,231,.08) 82%),
     linear-gradient(0deg, rgba(245,240,231,.6) 0%, rgba(245,240,231,0) 30%);
 }
 @media (max-width: 760px) {
   .hero-video { object-position: center center; }
-  .hero-bg:has(.hero-video.is-playing)::before { background: linear-gradient(0deg, rgba(245,240,231,.98) 0%, rgba(245,240,231,.93) 38%, rgba(245,240,231,.4) 60%, rgba(245,240,231,0) 74%); }
+  .hero-bg.has-video::before { background: linear-gradient(0deg, rgba(245,240,231,.98) 0%, rgba(245,240,231,.93) 38%, rgba(245,240,231,.4) 60%, rgba(245,240,231,0) 74%); }
 }
 
 /* =========================================================
    Home hero — CLEAR video, text straight on the footage
    White text with a soft shadow so it reads on any frame.
    ========================================================= */
-.hero-bg:has(.hero-video.is-playing)::before { display: none; }
-.hero-bg:has(.hero-video.is-playing) .hero-copy { max-width: 640px; }
-.hero-bg:has(.hero-video.is-playing) .hero-copy,
-.hero-bg:has(.hero-video.is-playing) .hero-copy .eyebrow,
-.hero-bg:has(.hero-video.is-playing) .hero-copy h1,
-.hero-bg:has(.hero-video.is-playing) .hero-copy .lede { color: #fff; }
-.hero-bg:has(.hero-video.is-playing) .hero-copy .eyebrow,
-.hero-bg:has(.hero-video.is-playing) .hero-copy .lede {
+.hero-bg.has-video::before { display: none; }
+.hero-bg.has-video .hero-copy { max-width: 640px; }
+.hero-bg.has-video .hero-copy,
+.hero-bg.has-video .hero-copy .eyebrow,
+.hero-bg.has-video .hero-copy h1,
+.hero-bg.has-video .hero-copy .lede { color: #fff; }
+.hero-bg.has-video .hero-copy .eyebrow,
+.hero-bg.has-video .hero-copy .lede {
   text-shadow: 0 1px 2px rgba(0,0,0,.7), 0 2px 14px rgba(0,0,0,.55);
 }
-.hero-bg:has(.hero-video.is-playing) .hero-copy .lede { font-weight: 500; }
-.hero-bg:has(.hero-video.is-playing) .hero-copy h1 {
+.hero-bg.has-video .hero-copy .lede { font-weight: 500; }
+.hero-bg.has-video .hero-copy h1 {
   text-shadow: 0 2px 4px rgba(0,0,0,.55), 0 4px 28px rgba(0,0,0,.5);
 }
-.hero-bg:has(.hero-video.is-playing) .hero-copy h1 .accent { color: #FF7A3D; }
-.hero-bg:has(.hero-video.is-playing) .hero-copy .btn-ghost {
+.hero-bg.has-video .hero-copy h1 .accent { color: #FF7A3D; }
+.hero-bg.has-video .hero-copy .btn-ghost {
   color: #fff; border-color: #fff; background: rgba(0,0,0,.18);
 }
-.hero-bg:has(.hero-video.is-playing) .hero-copy .btn-ghost:hover { background: #fff; color: #17140F; }
-.hero-bg:has(.hero-video.is-playing) .hero-copy .btn { box-shadow: 0 4px 18px rgba(0,0,0,.28); }
+.hero-bg.has-video .hero-copy .btn-ghost:hover { background: #fff; color: #17140F; }
+.hero-bg.has-video .hero-copy .btn { box-shadow: 0 4px 18px rgba(0,0,0,.28); }
 @media (max-width: 760px) {
-  .hero-bg:has(.hero-video.is-playing) .wrap { padding-block: 0 44px; }
+  .hero-bg.has-video .wrap { padding-block: 0 44px; }
 }
 
 /* Header logo (gold 3D logo with "Always Ready.") */
@@ -686,3 +686,6 @@ body.no-scroll { overflow: hidden; }
 .nav { padding-block: 10px; }
 @media (max-width: 1180px) { .brand img { height: 56px; } }
 @media (max-width: 520px) { .brand img { height: 46px; } }
+
+/* Video hero: no photo underneath, video shows from the first moment */
+.hero-bg.has-video { background: #3a3a2c; }
