@@ -12,7 +12,7 @@
   <link rel="icon" href="assets/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@1,800;1,900&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="home">
@@ -30,11 +30,10 @@
       <div class="wrap">
         <div class="hero-copy">
           <span class="eyebrow">Always Ready</span>
-          <h1>Equip people <span class="accent">before they need it.</span></h1>
-          <p class="lede">Gear, skills and a family plan for the first 72 hours.</p>
+          <h1>Equipping you <span class="accent">before you need it.</span></h1>
           <div class="btn-row">
-            <a class="btn btn-primary" href="gobag.html">Explore the Go-Bag <span class="arrow">→</span></a>
-            <a class="btn btn-ghost" href="about.html">About</a>
+            <a class="btn btn-primary" href="gobag.html">Explore your kit <span class="arrow">→</span></a>
+            <a class="btn btn-ghost" href="system.html">About</a>
           </div>
         </div>
       </div>
@@ -46,7 +45,7 @@
         <div class="stat"><b>72<span>H</span></b><small>Self-reliance</small></div>
         <div class="stat"><b>22</b><small>Serialised items</small></div>
         <div class="stat"><b>10</b><small>Training modules</small></div>
-        <div class="stat"><b>1</b><small>Standard</small></div>
+        <div class="stat"><b>1</b><small>Standard system</small></div>
       </div>
     </div>
 
@@ -68,8 +67,7 @@
       <div class="wrap">
         <div class="section-head split">
           <div class="stack">
-            <span class="eyebrow">Choose your bag</span>
-            <h2>Three ways to carry it.</h2>
+            <h2>2 Bags, 1 System.</h2>
           </div>
           <a class="btn btn-ghost" href="gobag.html#items">Individual items</a>
         </div>
@@ -96,20 +94,28 @@
       </div>
     </section>
 
-    <!-- Film -->
-    <section class="section sand">
-      <div class="wrap film-solo">
-        <div class="frame">
-          <video src="assets/video/kidan72-system-film.mp4" poster="assets/img/posters/system-film.jpg" controls playsinline preload="metadata"></video>
-        </div>
-      </div>
-    </section>
-
     <!-- Approach, in one line -->
     <section class="section tight">
       <div class="wrap statement">
         <p class="old">"Buy this bag."</p>
-        <p class="new">"Here is how you become prepared."</p>
+        <p class="new">"Here is how you become ready."</p>
+      </div>
+    </section>
+
+    <!-- Film: the KIDAN 72 brand film from YouTube, played right here on the page
+         with only play/pause (no YouTube title, channel name or controls).
+         The link is set in js/data.js (KIDAN.brandFilm). -->
+    <section class="section sand">
+      <div class="wrap film-solo">
+        <div class="frame">
+          <div class="yt-film" id="brand-film">
+            <img class="yt-film-cover" src="assets/img/kidan72-hero-poster.jpg" alt="" loading="lazy">
+            <div class="yt-film-stage"></div>
+            <button type="button" class="yt-film-play" aria-label="Play the KIDAN 72 film">
+              <span class="film-link-play" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -124,7 +130,9 @@
 
   <footer id="site-footer"></footer>
 
+  <script src="js/config.js"></script>
   <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
   <script src="js/site.js"></script>
   <script src="js/home.js"></script>
 </body>

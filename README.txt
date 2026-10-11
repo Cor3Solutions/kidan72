@@ -17,6 +17,7 @@ PAGES
 FOLDERS
   css/style.css           All colours, fonts and layout
   js/data.js              PRICES, ORDER CONTACTS, BAGS, ITEMS, MODULES, VIDEO LINKS (edit this one)
+  js/config.js, js/store.js  Load the content for every page (do not edit)
   js/site.js              Menu and footer shared by every page
   js/home.js, gobag.js, item.js, order.js, training.js, readiness.js   Scripts for each page
   assets/video/           Animated logo + the two Go-Bag films

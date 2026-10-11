@@ -706,3 +706,72 @@ body.no-scroll { overflow: hidden; }
   .hero-bg.has-video .hero-copy h1 { font-size: 36px; }
   .hero-bg.has-video .hero-copy .btn { padding-inline: 16px; font-size: 14px; letter-spacing: 1px; }
 }
+
+/* Shown only if the database cannot be reached (database mode) */
+.load-error { margin-block: 24px; padding: 16px 20px; background: #FBE9E1; border-left: 4px solid var(--orange); color: var(--ink); }
+
+/* =========================================================
+   Brand film (YouTube, plays on the page with only play/pause)
+   ========================================================= */
+.yt-film { position: relative; aspect-ratio: 16 / 9; background: #000; overflow: hidden; }
+.yt-film-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; transition: opacity .4s; }
+/* The player is 70% taller than the frame: YouTube's title strip (top) and
+   logo strip (bottom) land in the hidden part, the film itself fills the frame. */
+.yt-film-stage { position: absolute; left: 0; right: 0; top: -35%; height: 170%; z-index: 1; }
+.yt-film-stage iframe { width: 100%; height: 100%; border: 0; display: block; pointer-events: none; }
+/* Clear layer that catches every tap: play / pause */
+.yt-film-play {
+  position: absolute; inset: 0; z-index: 3; width: 100%; border: 0; padding: 0; cursor: pointer;
+  display: grid; place-items: center; background: rgba(0,0,0,.28); transition: background .25s;
+}
+.yt-film-play .film-link-play { width: 84px; height: 84px; transition: opacity .25s, transform .2s; }
+.yt-film-play:hover .film-link-play { transform: scale(1.06); }
+.yt-film[data-state="playing"] .yt-film-cover,
+.yt-film[data-state="paused"] .yt-film-cover { opacity: 0; pointer-events: none; }
+.yt-film[data-state="playing"] .yt-film-play { background: transparent; }
+.yt-film[data-state="playing"] .yt-film-play .film-link-play { opacity: 0; }
+.yt-film[data-state="paused"] .yt-film-play { background: rgba(0,0,0,.35); }
+.yt-film[data-state="loading"] .film-link-play { animation: filmPulse 1s ease-in-out infinite; }
+@keyframes filmPulse { 50% { opacity: .55; } }
+/* Fallback when a browser insists on a tap inside the player itself:
+   the tap goes straight to the player, still cropped (no title/logo shown). */
+.yt-film.needs-tap .yt-film-cover, .yt-film.needs-tap .yt-film-play { display: none; }
+.yt-film.needs-tap .yt-film-stage iframe { pointer-events: auto; }
+@media (max-width: 600px) { .yt-film-play .film-link-play { width: 64px; height: 64px; } }
+
+/* Round orange play button */
+.film-link-play { position: relative; display: block; border-radius: 50%; background: var(--orange); box-shadow: 0 4px 18px rgba(0,0,0,.3); }
+.film-link-play::after { content: ""; position: absolute; left: 54%; top: 50%; transform: translate(-50%, -50%); border-style: solid; border-width: 15px 0 15px 25px; border-color: transparent transparent transparent #fff; }
+@media (max-width: 600px) { .film-link-play::after { border-width: 12px 0 12px 20px; } }
+
+/* =========================================================
+   Titles in the KIDAN 72 logo style
+   Saira Black Italic: wide, heavy, slanted, squared curves,
+   the closest web font to the KIDAN.72 logo lettering.
+   It is wider than the old title font, so sizes are a bit smaller.
+   ========================================================= */
+:root { --f-title: "Saira", "Arial Black", Arial, sans-serif; }
+h1, h2, h3, h4,
+.tile span, .statement p, .stat b, .module .code {
+  font-family: var(--f-title); font-style: italic; font-weight: 900; letter-spacing: 0;
+}
+h3, h4 { font-weight: 800; }
+h1 { font-size: clamp(36px, 5.2vw, 64px); line-height: 1.02; }
+h2 { font-size: clamp(26px, 3.4vw, 42px); line-height: 1.05; }
+h3 { font-size: calc(var(--s3) * .85); line-height: 1.1; }
+.cta-band h2 { font-size: clamp(26px, 3.4vw, 40px); }
+.photo-banner figcaption h2 { font-size: clamp(26px, 3.4vw, 44px); }
+.module summary h3 { font-size: 22px; }
+.tile span { font-size: 25px; }
+.stat b { font-size: 42px; }
+.statement .old { font-size: clamp(20px, 2.5vw, 28px); }
+.statement .new { font-size: clamp(28px, 4.4vw, 52px); }
+.hero-bg.has-video .hero-copy h1 { font-size: clamp(36px, 5.2vw, 64px); }
+@media (max-width: 760px) {
+  .hero-bg h1, .hero-bg.has-video .hero-copy h1 { font-size: clamp(30px, 8.4vw, 40px); }
+  .tile span { font-size: 19px; }
+  .stat b { font-size: 34px; }
+}
+@media (max-width: 380px) {
+  .hero-bg.has-video .hero-copy h1 { font-size: 29px; }
+}

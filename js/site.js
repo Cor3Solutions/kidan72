@@ -6,14 +6,21 @@
 
 const NAV = [
   { id: "home", label: "Home", href: "index.html" },
-  { id: "about", label: "About", href: "about.html" },
-  { id: "system", label: "The System", href: "system.html" },
-  { id: "gobag", label: "Go-Bag", href: "gobag.html" },
+  { id: "system", label: "About", href: "system.html" },
+  { id: "gobag", label: "Kit", href: "gobag.html" },
   { id: "training", label: "Training", href: "training.html" },
-  { id: "readiness", label: "Readiness Check", href: "readiness.html" }
+  { id: "readiness", label: "Community", href: "readiness.html" }
 ];
 
 /* ---------- Helpers ---------- */
+/* Makes text safe to put into the page. Use it for every piece of
+   content that comes from js/data.js or, later, the database. */
+function esc(value) {
+  return String(value == null ? "" : value)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
 function icon(name) {
   return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">${KIDAN.icons[name] || ""}</svg>`;
 }
@@ -60,9 +67,9 @@ function youtubeId(url) {
 
 function videoButton(entry, title, subtitle, popupTitle = title) {
   const id = youtubeId(entry.video);
-  return `<button type="button" class="video-link" data-video="${id}" data-title="${popupTitle.replace(/"/g, "&quot;")}">
+  return `<button type="button" class="video-link" data-video="${id}" data-title="${esc(popupTitle)}">
     <span class="play">${icon("play")}</span>
-    <span><strong>${title}</strong><small>${subtitle}</small></span>
+    <span><strong>${esc(title)}</strong><small>${esc(subtitle)}</small></span>
     <span class="ext">${id ? "Play video" : "Coming soon"}</span>
   </button>`;
 }
@@ -91,8 +98,8 @@ const VideoModal = {
     this.lastFocus = document.activeElement;
     this.el.querySelector("#vmodal-title").textContent = title;
     this.el.querySelector("#vmodal-frame").innerHTML = id
-      ? `<iframe src="https://www.youtube.com/embed/${id}?rel=0&modestbranding=1&playsinline=1"
-           title="${title.replace(/"/g, "&quot;")}" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      ? `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1"
+           title="${esc(title)}" allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
       : `<div class="vmodal-soon">${icon("play")}<strong>Video coming soon</strong><p>This training video is being produced. Check back shortly.</p></div>`;
     this.el.hidden = false;
@@ -114,14 +121,14 @@ document.addEventListener("click", e => {
   VideoModal.open(b.dataset.video, b.dataset.title);
 });
 
-function detailUrl(serial) { return "item.html?sn=" + serial; }
+function detailUrl(serial) { return "item.html?sn=" + encodeURIComponent(serial); }
 
 /* Photo slot. Shows assets/img/products/<serial>.jpg when present,
    otherwise a specimen plate with the item's icon. */
 function photoSlot(serial, iconName, extraClass = "") {
   return `<div class="photo ${extraClass}">
-    <span class="sn-badge">${serial}</span>
-    <img src="assets/img/products/${serial}.jpg" alt="" loading="lazy" onerror="this.closest('.photo').classList.add('no-photo')">
+    <span class="sn-badge">${esc(serial)}</span>
+    <img src="assets/img/products/${encodeURIComponent(serial)}.jpg" alt="" loading="lazy" onerror="this.closest('.photo').classList.add('no-photo')">
     <span class="ticks"></span>
     <span class="placeholder">${icon(iconName)}<small>Photo coming soon</small></span>
   </div>`;
@@ -129,24 +136,24 @@ function photoSlot(serial, iconName, extraClass = "") {
 
 function addButton(serial, label = "Add to order") {
   if (!isSold(serial)) return `<span class="tag">Included with the Black Pouch</span>`;
-  return `<button type="button" class="btn btn-add" data-add="${serial}">${label}</button>`;
+  return `<button type="button" class="btn btn-add" data-add="${esc(serial)}">${esc(label)}</button>`;
 }
 
 /* Catalog card for an individual item */
 function itemCard(item) {
-  return `<article class="item" data-cat="${item.cat}">
+  return `<article class="item" data-cat="${esc(item.cat)}">
     <a class="item-photo" href="${detailUrl(item.serial)}" tabindex="-1" aria-hidden="true">${photoSlot(item.serial, item.icon)}</a>
     <div class="item-body">
-      <span class="tag">${KIDAN.categories[item.cat]}</span>
-      <h3><a href="${detailUrl(item.serial)}">${item.name}</a></h3>
-      <p>${item.short}</p>
+      <span class="tag">${esc(KIDAN.categories[item.cat])}</span>
+      <h3><a href="${detailUrl(item.serial)}">${esc(item.name)}</a></h3>
+      <p>${esc(item.short)}</p>
       <div class="item-foot">
-        <span class="serial">${item.serial}</span>
+        <span class="serial">${esc(item.serial)}</span>
         <span class="price">${isSold(item.serial) ? peso(price(item.serial)) : "Bag only"}</span>
       </div>
       <div class="item-actions">
         <a class="link-more" href="${detailUrl(item.serial)}">Details →</a>
-        ${isSold(item.serial) ? `<button type="button" class="btn-mini" data-add="${item.serial}">+ Add</button>` : ""}
+        ${isSold(item.serial) ? `<button type="button" class="btn-mini" data-add="${esc(item.serial)}">+ Add</button>` : ""}
       </div>
     </div>
   </article>`;
@@ -158,13 +165,13 @@ function bagCard(bag) {
   return `<article class="bag-card${bag.includes ? " featured" : ""}">
     <a href="${detailUrl(bag.serial)}" tabindex="-1" aria-hidden="true">${photoSlot(bag.serial, bag.icon)}</a>
     <div class="bag-body">
-      <span class="tag">${bag.label}</span>
-      <h3><a href="${detailUrl(bag.serial)}">${bag.name}</a></h3>
-      <p>${bag.short}</p>
-      <div class="bag-meta"><span class="serial">${bag.serial}</span><span class="serial">${count} items</span></div>
+      <span class="tag">${esc(bag.label)}</span>
+      <h3><a href="${detailUrl(bag.serial)}">${esc(bag.name)}</a></h3>
+      <p>${esc(bag.short)}</p>
+      <div class="bag-meta"><span class="serial">${esc(bag.serial)}</span><span class="serial">${count} items</span></div>
       <div class="bag-price">${peso(price(bag.serial))}</div>
       <div class="bag-actions">
-        <button type="button" class="btn btn-primary" data-add="${bag.serial}">Add to order</button>
+        <button type="button" class="btn btn-primary" data-add="${esc(bag.serial)}">Add to order</button>
         <a class="btn btn-ghost" href="${detailUrl(bag.serial)}">View contents</a>
       </div>
     </div>
@@ -226,7 +233,9 @@ document.addEventListener("click", e => {
   e.preventDefault();
   const sn = btn.dataset.add;
   Order.add(sn, 1);
-  toast(`<strong>${findItem(sn).name}</strong> added to your order. <a href="order.html">View order →</a>`);
+  const it = findItem(sn);
+  if (!it) return;
+  toast(`<strong>${esc(it.name)}</strong> added to your order. <a href="order.html">View order →</a>`);
 });
 document.addEventListener("order:change", updateOrderBadge);
 
@@ -238,7 +247,7 @@ function buildHeader() {
   el.className = "site-header";
   el.innerHTML = `
     <div class="topline"><div class="wrap">
-      <span><b>■</b> Equip people before they need it</span>
+      <span><b>■</b> Equipping you, before you need it.</span>
       <span class="hide-sm">Always Ready.</span>
     </div></div>
     <div class="wrap nav">
@@ -267,7 +276,7 @@ function buildFooter() {
       <div class="foot-grid">
         <div>
           <img src="assets/img/kidan72-logo-light.png" alt="KIDAN 72 — Always Ready.">
-          <p>A practical preparedness system built for Philippine typhoons, flooding, and the first 72 hours after a major disruption.</p>
+          <p>A practical readiness system built for the first 72 hours after a major disruption.</p>
         </div>
         <div><h4>Shop</h4><ul>
           <li><a href="item.html?sn=K72-BAG-000">Complete Go-Bag</a></li>
@@ -277,13 +286,13 @@ function buildFooter() {
           <li><a href="order.html">My Order</a></li>
         </ul></div>
         <div><h4>Prepare</h4><ul>
-          <li><a href="system.html">The System</a></li>
+          <li><a href="system.html">About</a></li>
           <li><a href="training.html">Training Modules</a></li>
-          <li><a href="readiness.html">Readiness Check</a></li>
+          <li><a href="readiness.html">Community</a></li>
           <li><a href="system.html#family">Family System</a></li>
         </ul></div>
         <div><h4>KIDAN 72</h4><ul>
-          <li><a href="about.html">About</a></li>
+          <li><a href="system.html">About KIDAN 72</a></li>
           <li><a href="about.html#contact">Contact</a></li>
           <li><a href="system.html#typhoon">Typhoon System</a></li>
           <li><a href="system.html#flood">Flood System</a></li>
@@ -298,4 +307,4 @@ function buildFooter() {
 
 buildHeader();
 buildFooter();
-updateOrderBadge();
+Store.ready.then(updateOrderBadge);

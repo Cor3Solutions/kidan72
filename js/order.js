@@ -25,18 +25,18 @@ function renderLines() {
     <div class="order-line">
       <a href="${detailUrl(l.sn)}" tabindex="-1" aria-hidden="true">${photoSlot(l.sn, l.item.icon)}</a>
       <div class="stack" style="gap:4px">
-        <span class="serial">${l.sn}</span>
-        <h3><a href="${detailUrl(l.sn)}">${l.item.name}</a></h3>
+        <span class="serial">${esc(l.sn)}</span>
+        <h3><a href="${detailUrl(l.sn)}">${esc(l.item.name)}</a></h3>
         <span class="serial">${peso(l.unit)} each</span>
       </div>
       <div class="right">
         <div class="qty">
-          <button type="button" data-qty="${l.sn}" data-step="-1" aria-label="Decrease ${l.item.name}">−</button>
-          <input type="number" min="1" max="99" value="${l.qty}" data-qty-input="${l.sn}" id="q-${l.sn}" aria-label="Quantity of ${l.item.name}">
-          <button type="button" data-qty="${l.sn}" data-step="1" aria-label="Increase ${l.item.name}">+</button>
+          <button type="button" data-qty="${esc(l.sn)}" data-step="-1" aria-label="Decrease ${esc(l.item.name)}">−</button>
+          <input type="number" min="1" max="99" value="${l.qty}" data-qty-input="${esc(l.sn)}" id="q-${esc(l.sn)}" aria-label="Quantity of ${esc(l.item.name)}">
+          <button type="button" data-qty="${esc(l.sn)}" data-step="1" aria-label="Increase ${esc(l.item.name)}">+</button>
         </div>
         <span class="line-total">${l.unit == null ? "PHP xx" : peso(l.unit * l.qty)}</span>
-        <button type="button" class="remove" data-remove="${l.sn}">Remove</button>
+        <button type="button" class="remove" data-remove="${esc(l.sn)}">Remove</button>
       </div>
     </div>`).join("")}</div>
     <div class="btn-row" style="margin-top:20px;justify-content:space-between">
@@ -45,7 +45,7 @@ function renderLines() {
     </div>`;
 
   document.getElementById("sum-rows").innerHTML = lines.map(l =>
-    `<div style="display:flex;justify-content:space-between;gap:12px;font-size:15px"><span>${l.qty} × ${l.item.name}</span><span>${l.unit == null ? "PHP xx" : peso(l.unit * l.qty)}</span></div>`).join("");
+    `<div style="display:flex;justify-content:space-between;gap:12px;font-size:15px"><span>${l.qty} × ${esc(l.item.name)}</span><span>${l.unit == null ? "PHP xx" : peso(l.unit * l.qty)}</span></div>`).join("");
   document.getElementById("sum-total").textContent = peso(Order.total());
 }
 
@@ -68,12 +68,23 @@ linesEl.addEventListener("change", e => {
 document.addEventListener("order:change", renderLines);
 
 /* ---------- Message ---------- */
-function orderMessage() {
+function customerDetails() {
   const d = Object.fromEntries(new FormData(form));
+  return {
+    name: (d.name || "").trim(),
+    mobile: (d.mobile || "").trim(),
+    address: (d.address || "").trim(),
+    notes: (d.notes || "").trim()
+  };
+}
+
+function orderMessage(orderNo) {
+  const d = customerDetails();
   const lines = Order.lines();
   const rows = lines.map(l => `• ${l.qty} × ${l.item.name} (${l.sn}) — ${l.unit == null ? "PHP xx" : peso(l.unit * l.qty)}`);
   return [
     "KIDAN 72 ORDER",
+    orderNo ? `Order no.: ${orderNo}` : "",
     "",
     ...rows,
     "",
@@ -111,6 +122,30 @@ async function copyText(text) {
   }
 }
 
+/* ---------- Saving the order (database mode only) ----------
+   Static mode: does nothing, the order is only sent as a message.
+   Database mode: saves the order through api/orders.php and puts the
+   order number in the message. The same order is saved only once,
+   even if the customer presses several send buttons. */
+let lastSaved = { key: "", orderNo: "" };
+
+async function saveToDatabase(channel) {
+  if (Store.mode !== "api") return "";
+  const customer = customerDetails();
+  const items = Order.lines().map(l => ({ serial: l.sn, qty: l.qty }));
+  const key = JSON.stringify([customer, items]);
+  if (key === lastSaved.key) return lastSaved.orderNo;
+  try {
+    const result = await Store.saveOrder({ customer, items, channel });
+    lastSaved = { key, orderNo: result.orderNo || "" };
+    return lastSaved.orderNo;
+  } catch (err) {
+    console.error(err);
+    msgEl.textContent = "We could not record your order online, but you can still send it to us below.";
+    return "";
+  }
+}
+
 /* ---------- Send buttons ---------- */
 function renderSend() {
   const c = KIDAN.contact;
@@ -127,9 +162,12 @@ function renderSend() {
 sendEl.addEventListener("click", async e => {
   const b = e.target.closest("[data-send]");
   if (!b || !validate()) return;
-  const text = orderMessage();
   const c = KIDAN.contact;
   const how = b.dataset.send;
+  // Only wait for the database when it is switched on, so copying keeps
+  // working on iPhones (Safari only allows copying right after a tap).
+  const orderNo = Store.mode === "api" ? await saveToDatabase(how) : "";
+  const text = orderMessage(orderNo);
 
   if (how === "copy") {
     const ok = await copyText(text);
@@ -152,5 +190,7 @@ sendEl.addEventListener("click", async e => {
   }
 });
 
-renderLines();
-renderSend();
+Store.ready.then(() => {
+  renderLines();
+  renderSend();
+});

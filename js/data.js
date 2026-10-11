@@ -55,6 +55,12 @@ KIDAN.contact = {
   email: ""
 };
 
+/* ---------------------------------------------------------
+   BRAND FILM — the main KIDAN 72 film (YouTube link).
+   Plays on the homepage and from the "Watch the film" button.
+   --------------------------------------------------------- */
+KIDAN.brandFilm = "https://youtu.be/_H-cqF8l8lw";
+
 KIDAN.categories = {
   WTR: "Water & Hydration",
   FOD: "Nourishment",
