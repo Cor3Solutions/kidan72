@@ -4,9 +4,9 @@
 
    PHOTOS: save each photo in assets/img/products/ named by its
    serial number, e.g.  K72-WTR-001.jpg
-   Bag photos: K72-BAG-000.jpg (Complete Go-Bag),
-               K72-BAG-001.jpg (Black Pouch),
-               K72-BAG-002.jpg (Coyote Brown Pouch)
+   Bag photos: K72-BAG-000.jpg (KIDAN 72 Preparedness Go-Bag),
+               K72-BAG-001.jpg (Black KIDAN),
+               K72-BAG-002.jpg (Coyote KIDAN)
    Photos appear on the site automatically once the file exists.
 
    VIDEOS: paste your YouTube link into "video" for any item or
@@ -83,12 +83,12 @@ KIDAN.categories = {
    --------------------------------------------------------- */
 KIDAN.bags = [
   {
-    serial: "K72-BAG-000", icon: "bag", name: "KIDAN 72 Complete Go-Bag", label: "Complete system",
-    short: "The full 72-hour system: the main carry bag with the Black Pouch and the Coyote Brown Pouch packed inside.",
-    summary: "Everything one person needs for the first 72 hours after a typhoon, flood or evacuation. The main carry bag holds both modular pouches, so you can grab the whole system at once or split it between family members.",
+    serial: "K72-BAG-000", icon: "bag", name: "KIDAN 72 Preparedness Go-Bag", label: "Complete system",
+    short: "The full 72-hour system: the main carry bag with the Black KIDAN and the Coyote KIDAN packed inside.",
+    summary: "Everything one person needs for the first 72 hours after a typhoon, flood or evacuation. The main carry bag holds the Black KIDAN and the Coyote KIDAN, so you can grab the whole system at once or split it between family members.",
     includes: ["K72-BAG-001", "K72-BAG-002"],
     specs: [
-      ["Configuration", "Main carry bag + Black Pouch + Coyote Brown Pouch"],
+      ["Configuration", "Main carry bag + Black KIDAN + Coyote KIDAN"],
       ["Coverage", "1 person · 72 hours"],
       ["Contents", "All serialised items in both pouches"],
       ["Registration", "Logged in the KIDAN 72 Database with owner profile, inventory and expiry dates"],
@@ -96,25 +96,25 @@ KIDAN.bags = [
     ]
   },
   {
-    serial: "K72-BAG-001", icon: "aid", name: "Black Pouch", label: "Sustainment module",
-    short: "Keeps the body going: water, food, first aid, medicine, hygiene and documents.",
-    summary: "The sustainment module. Everything that keeps a person fed, hydrated, clean and treated for injuries, plus the documents and contact card needed after an evacuation.",
+    serial: "K72-BAG-001", icon: "aid", name: "Black KIDAN", label: "Sustainment module",
+    short: "Contains your medical kit, food, electronic needs and documents.",
+    summary: "Contains your medical kit, food, electronic needs and documents: everything that keeps you fed, treated and connected, plus the papers you need after an evacuation.",
     contents: ["K72-WTR-001", "K72-WTR-002", "K72-FOD-001", "K72-MED-001", "K72-MED-002", "K72-HYG-001", "K72-DOC-001", "K72-DOC-002", "K72-COM-002"],
     specs: [
       ["Role", "Sustainment: hydration, nourishment, medical, hygiene, documents"],
       ["Colour", "Black"],
-      ["Carry", "Inside the Complete Go-Bag, or on its own"]
+      ["Carry", "Inside the Preparedness Go-Bag, or on its own"]
     ]
   },
   {
-    serial: "K72-BAG-002", icon: "tool", name: "Coyote Brown Pouch", label: "Field module",
-    short: "Gets you through the conditions: light, power, radio, shelter, tools and navigation.",
-    summary: "The field module. The gear for darkness, rain, signal loss and movement: lights, power, radio, shelter, cordage, tools and navigation.",
+    serial: "K72-BAG-002", icon: "tool", name: "Coyote KIDAN", label: "Field module",
+    short: "Contains your tools and gear.",
+    summary: "Contains your tools and gear: everything for darkness, rain, shelter and moving safely.",
     contents: ["K72-LGT-001", "K72-LGT-002", "K72-PWR-001", "K72-PWR-002", "K72-COM-001", "K72-COM-003", "K72-WTH-001", "K72-WTH-002", "K72-WTH-003", "K72-TLS-001", "K72-TLS-002", "K72-TLS-003", "K72-NAV-001"],
     specs: [
       ["Role", "Field: light, power, communication, shelter, tools, navigation"],
       ["Colour", "Coyote brown"],
-      ["Carry", "Inside the Complete Go-Bag, or on its own"]
+      ["Carry", "Inside the Preparedness Go-Bag, or on its own"]
     ]
   }
 ];

@@ -135,7 +135,7 @@ function photoSlot(serial, iconName, extraClass = "") {
 }
 
 function addButton(serial, label = "Add to order") {
-  if (!isSold(serial)) return `<span class="tag">Included with the Black Pouch</span>`;
+  if (!isSold(serial)) return `<span class="tag">Included with the Black KIDAN</span>`;
   return `<button type="button" class="btn btn-add" data-add="${esc(serial)}">${esc(label)}</button>`;
 }
 
@@ -279,9 +279,9 @@ function buildFooter() {
           <p>A practical readiness system built for the first 72 hours after a major disruption.</p>
         </div>
         <div><h4>Shop</h4><ul>
-          <li><a href="item.html?sn=K72-BAG-000">Complete Go-Bag</a></li>
-          <li><a href="item.html?sn=K72-BAG-001">Black Pouch</a></li>
-          <li><a href="item.html?sn=K72-BAG-002">Coyote Brown Pouch</a></li>
+          <li><a href="item.html?sn=K72-BAG-000">Preparedness Go-Bag</a></li>
+          <li><a href="item.html?sn=K72-BAG-001">Black KIDAN</a></li>
+          <li><a href="item.html?sn=K72-BAG-002">Coyote KIDAN</a></li>
           <li><a href="gobag.html#items">Individual items</a></li>
           <li><a href="order.html">My Order</a></li>
         </ul></div>

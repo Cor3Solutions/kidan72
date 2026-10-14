@@ -7,7 +7,7 @@ function buyBox(serial, opts = {}) {
   if (!isSold(serial)) {
     const p = pouchOf(serial);
     return `<div class="buy-box"><span class="serial">Availability</span>
-      <p>Included with the ${p ? `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>` : "Go-Bag"} and the Complete Go-Bag. Not sold separately.</p></div>`;
+      <p>Included with the ${p ? `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>` : "Go-Bag"} and the KIDAN 72 Preparedness Go-Bag. Not sold separately.</p></div>`;
   }
   return `<div class="buy-box">
     <span class="serial">${opts.label || "Price"}</span>
@@ -120,7 +120,7 @@ function renderItem(it) {
         <dl class="spec-table">
           <div><dt>Serial no.</dt><dd class="serial" style="color:var(--ink)">${esc(it.serial)}</dd></div>
           <div><dt>Category</dt><dd>${esc(KIDAN.categories[it.cat])}</dd></div>
-          ${pouch ? `<div><dt>Packed in</dt><dd><a href="${detailUrl(pouch.serial)}">${esc(pouch.name)}</a> · Complete Go-Bag</dd></div>` : ""}
+          ${pouch ? `<div><dt>Packed in</dt><dd><a href="${detailUrl(pouch.serial)}">${esc(pouch.name)}</a> · Preparedness Go-Bag</dd></div>` : ""}
           <div><dt>Specification</dt><dd>${esc(it.spec)}</dd></div>
           <div><dt>Maintenance</dt><dd>${esc(it.maintain)}</dd></div>
           ${module ? `<div><dt>Training</dt><dd><a href="training.html#module-${esc(module.code)}">Module ${esc(module.code)} · ${esc(module.name)}</a></dd></div>` : ""}
