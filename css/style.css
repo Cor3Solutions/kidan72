@@ -495,6 +495,7 @@ button.video-link { width: 100%; border: 0; font: inherit; text-align: left; cur
 .vmodal-close:hover { background: var(--ink); color: var(--card); }
 .vmodal-frame { aspect-ratio: 16 / 9; background: #000; }
 .vmodal-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.vmodal-frame .yt-film { width: 100%; height: 100%; }
 .vmodal-soon { height: 100%; display: grid; place-items: center; align-content: center; gap: 10px; text-align: center; color: #E9DDCB; background: var(--ink); padding: 24px; }
 .vmodal-soon svg { width: 44px; height: 44px; color: var(--orange); }
 .vmodal-soon strong { font-family: var(--f-display); font-size: 30px; text-transform: uppercase; letter-spacing: .5px; color: #fff; }
@@ -775,3 +776,135 @@ h3 { font-size: calc(var(--s3) * .85); line-height: 1.1; }
 @media (max-width: 380px) {
   .hero-bg.has-video .hero-copy h1 { font-size: 29px; }
 }
+
+/* Kit parts shown under a kit in the pouch contents */
+.contents-list .ci-parts { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.contents-list .ci-parts span { font-size: 12.5px; line-height: 1.3; padding: 3px 8px; background: var(--sand); color: var(--ink); }
+
+/* Extra photo thumbnails on an item page */
+.thumbs { display: flex; gap: 10px; margin-top: 12px; }
+.thumbs button { width: 92px; aspect-ratio: 4 / 3; padding: 0; border: 2px solid transparent; background: var(--sand); cursor: pointer; overflow: hidden; }
+.thumbs button[aria-current="true"] { border-color: var(--orange); }
+.thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* =========================================================
+   Phone-friendly layout: shorter pages, less scrolling
+   ========================================================= */
+/* Back-to-top button (appears after scrolling down) */
+.to-top {
+  position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 60;
+  width: 46px; height: 46px; display: grid; place-items: center; border: 0; cursor: pointer;
+  background: var(--ink); color: var(--card); box-shadow: 0 6px 18px rgba(0,0,0,.28);
+  transition: opacity .2s, transform .2s;
+}
+.to-top svg { width: 22px; height: 22px; }
+.to-top:hover { background: var(--orange); }
+.to-top[hidden] { display: grid; opacity: 0; transform: translateY(12px); pointer-events: none; }
+body:has(.vmodal:not([hidden])) .to-top { display: none; }
+
+/* Swipe dots under a swipe row (phones only) */
+.swipe-dots { display: none; }
+
+/* Sticky "jump to" bar on the About page */
+.subnav-bar { position: sticky; top: var(--header-h, 0px); z-index: 30; background: rgba(245, 240, 231, .96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+.subnav-bar .subnav { padding-block: 10px; }
+.subnav a[aria-current="true"] { background: var(--ink); border-color: var(--ink); color: var(--card); }
+
+/* Bag contents grouped by category, tap to open */
+.cat-group { border-bottom: 1px solid var(--line); }
+.cat-group summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 13px 4px;
+  font-family: var(--f-display); font-weight: 700; font-size: 17px; letter-spacing: .6px; text-transform: uppercase;
+}
+.cat-group summary::-webkit-details-marker { display: none; }
+.cat-group summary .n { white-space: nowrap; font-family: var(--f-mono); font-weight: 400; font-size: 12px; letter-spacing: 1px; color: var(--muted); margin-left: auto; }
+.cat-group summary::after { content: "+"; width: 26px; height: 26px; display: grid; place-items: center; border: 1.5px solid var(--ink); font-size: 16px; line-height: 1; flex: none; }
+.cat-group[open] summary::after { content: "–"; background: var(--ink); color: var(--card); }
+.cat-group .contents-list { border-top: 0; margin-bottom: 10px; }
+.cat-group .contents-list a:last-child { border-bottom: 0; }
+.cat-groups { border-top: 2px solid var(--ink); }
+.contents-tools { display: flex; justify-content: flex-end; }
+.contents-tools button { font-family: var(--f-mono); font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; background: none; border: 0; color: var(--orange); cursor: pointer; padding: 6px 0; }
+
+@media (max-width: 640px) {
+  /* Bags: swipe sideways instead of three tall cards */
+  .bag-lineup {
+    display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px;
+    margin-inline: calc(var(--gutter) * -1); padding: 2px var(--gutter) 4px; scroll-padding-inline: var(--gutter);
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .bag-lineup::-webkit-scrollbar { display: none; }
+  .bag-lineup > .bag-card { flex: 0 0 82%; scroll-snap-align: start; }
+  .bag-body { padding: 16px; gap: 8px; }
+  .bag-body h3 { font-size: 23px; }
+  .bag-price { font-size: 28px; }
+  .bag-actions .btn { padding: 10px 12px; font-size: 14px; }
+  .swipe-dots { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
+  .swipe-dots button { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: rgba(23,20,15,.22); cursor: pointer; transition: width .2s, background .2s; }
+  .swipe-dots button.on { width: 24px; border-radius: 5px; background: var(--orange); }
+
+  /* Kit page: filter chips in one swipeable row that stays on screen */
+  .toolbar {
+    position: sticky; top: var(--header-h, 0px); z-index: 20; flex-wrap: nowrap; gap: 0; display: block;
+    margin: 0 calc(var(--gutter) * -1) 16px; padding: 10px 0 8px; background: var(--sand); border-bottom: 1px solid rgba(23,20,15,.12);
+  }
+  .filters { flex-wrap: nowrap; overflow-x: auto; padding-inline: var(--gutter); scrollbar-width: none; }
+  .filters::-webkit-scrollbar { display: none; }
+  .filters button { flex: none; white-space: nowrap; }
+  .toolbar .count { display: block; padding: 6px var(--gutter) 0; font-size: 11.5px; }
+
+  /* Kit page: two items per row */
+  .catalog { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .item .photo { aspect-ratio: 5 / 4; }
+  .item .photo .sn-badge { font-size: 9.5px; left: 6px; top: 6px; padding: 3px 5px; letter-spacing: .6px; }
+  .item .photo .placeholder svg { width: 38px; height: 38px; }
+  .item .photo .placeholder small { font-size: 9px; }
+  .item-body { padding: 10px 10px 12px; gap: 6px; }
+  .item-body .tag { display: none; }
+  .item-body h3 { font-size: 16px; line-height: 1.12; }
+  .item-body { grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto 1fr auto; column-gap: 6px; }
+  .item-body > h3, .item-body > p, .item-body > .tag { grid-column: 1 / -1; }
+  .item-foot { padding-top: 0; border-top: 0; align-self: center; }
+  .item-foot .serial { display: none; }
+  .item .link-more { display: none; }
+  .item .price { font-size: 16px; }
+  .item-actions { gap: 6px; }
+  .item .link-more { font-size: 12px; letter-spacing: .8px; }
+  .item .btn-mini { padding: 6px 9px; font-size: 12.5px; }
+
+  /* About page: shorter photos, tighter sections, one-column steps */
+  .sys { padding-block: 34px; gap: 18px; }
+  .sys-photo { aspect-ratio: 16 / 9; }
+  .panel { padding: 16px; gap: 8px; }
+  .panel h4 { font-size: 19px; }
+  .cols { gap: 10px; }
+  .phase-row { grid-template-columns: 1fr; gap: 8px; padding-block: 12px; }
+  .flow { gap: 4px; }
+  .flow span { font-size: 14px; padding: 5px 9px; }
+  .datatable th, .datatable td { display: block; width: auto; border-bottom: 0; padding: 0 14px; }
+  .datatable th { padding-top: 12px; }
+  .datatable td { padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .subnav-bar .subnav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+  .subnav-bar .subnav::-webkit-scrollbar { display: none; }
+  .subnav-bar .subnav a { flex: none; white-space: nowrap; }
+
+  /* Training: video button fits on one line */
+  .video-link { gap: 12px; padding: 14px; }
+  .video-link .play { width: 44px; height: 44px; }
+  .video-link strong { font-size: 17px; }
+  .video-link .ext { display: none; }
+
+  /* Footer: two link columns side by side */
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px 18px; }
+  .foot-grid > div:first-child { grid-column: 1 / -1; }
+}
+.sys { scroll-margin-top: calc(var(--header-h, 80px) + 64px); }
+
+/* Kit page: Black KIDAN / Coyote KIDAN filter buttons with a colour swatch */
+.filters .pouch-btn { display: inline-flex; align-items: center; gap: 7px; }
+.filters .pouch-btn i { width: 12px; height: 12px; flex: none; border: 1px solid rgba(255,255,255,.5); }
+.filters .pouch-K72-BAG-001 i { background: #17140F; }
+.filters .pouch-K72-BAG-002 i { background: #8A6E4B; }
+.filters .pouch-btn[aria-pressed="true"] i { border-color: #fff; }
+.filter-sep { width: 1px; align-self: stretch; background: rgba(23,20,15,.2); margin-inline: 4px; flex: none; }
+@media (max-width: 640px) { .filter-sep { margin-block: 4px; } }

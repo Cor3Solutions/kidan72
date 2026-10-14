@@ -33,9 +33,16 @@ function findItem(serial) {
   return KIDAN.items.find(i => i.serial === serial);
 }
 
-/* Which pouch an item is packed in */
-function pouchOf(serial) {
-  return KIDAN.bags.find(b => b.contents && b.contents.includes(serial));
+/* Which pouches an item is packed in (some items are in both) */
+function pouchesOf(serial) {
+  return KIDAN.bags.filter(b => b.contents && b.contents.includes(serial));
+}
+function pouchOf(serial) { return pouchesOf(serial)[0]; }
+
+/* Number of items packed in a bag (a kit counts as one) */
+function packingCount(bag) {
+  if (bag.includes) return bag.includes.reduce((n, sn) => n + packingCount(findBag(sn)), 0);
+  return (bag.contents || []).length;
 }
 
 function bagContents(bag) {
@@ -74,6 +81,89 @@ function videoButton(entry, title, subtitle, popupTitle = title) {
   </button>`;
 }
 
+/* ---------- Clean YouTube player (no title, channel name, logo or controls) ----------
+   Used for the homepage film and every video pop-up.
+   - The YouTube player is made taller than its frame, so the strips where
+     YouTube shows its title and logo sit outside the visible area.
+   - A clear layer on top catches taps, so YouTube's own buttons never show:
+     tap to play, tap again to pause.
+   - Plays still count as views on the YouTube channel.
+   box must contain  .yt-film-stage  and  button.yt-film-play  (and may contain
+   an img.yt-film-cover shown before playing). */
+function loadYouTubeApi() {
+  if (window.YT && window.YT.Player) return Promise.resolve();
+  if (loadYouTubeApi._p) return loadYouTubeApi._p;
+  loadYouTubeApi._p = new Promise(resolve => {
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => { if (prev) prev(); resolve(); };
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+  });
+  return loadYouTubeApi._p;
+}
+
+function cleanPlayer(box, id, opts = {}) {
+  const label = opts.label || "the video";
+  const btn = box.querySelector(".yt-film-play");
+  const stage = box.querySelector(".yt-film-stage");
+  let player = null, started = false, timer = null, gone = false;
+
+  function setState(state) {            // "idle" | "loading" | "playing" | "paused"
+    box.dataset.state = state;
+    btn.setAttribute("aria-label", (state === "playing" ? "Pause " : "Play ") + label);
+  }
+  setState("idle");
+
+  function start() {
+    setState("loading");
+    loadYouTubeApi().then(() => {
+      if (gone) return;
+      const holder = document.createElement("div");
+      stage.appendChild(holder);
+      player = new YT.Player(holder, {
+        videoId: id,
+        host: "https://www.youtube-nocookie.com",
+        playerVars: { autoplay: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, modestbranding: 1, iv_load_policy: 3, playsinline: 1 },
+        events: {
+          onReady: e => e.target.playVideo(),
+          onStateChange: e => {
+            if (e.data === YT.PlayerState.PLAYING) { started = true; box.classList.remove("needs-tap"); setState("playing"); }
+            else if (e.data === YT.PlayerState.PAUSED) setState("paused");
+            else if (e.data === YT.PlayerState.ENDED) { player.seekTo(0, true); player.pauseVideo(); setState("paused"); }
+          }
+        }
+      });
+      // Some browsers block playing until the video itself is tapped:
+      // if it has not started after a few seconds, let the tap through (still cropped).
+      timer = setTimeout(() => { if (!started) box.classList.add("needs-tap"); }, 3500);
+    });
+  }
+
+  btn.addEventListener("click", () => {
+    if (!player) { start(); return; }
+    if (box.dataset.state === "playing") player.pauseVideo();
+    else player.playVideo();
+  });
+  if (opts.autostart) start();
+
+  return {
+    destroy() {
+      gone = true; clearTimeout(timer);
+      try { if (player && player.destroy) player.destroy(); } catch (e) { /* already gone */ }
+      player = null;
+    }
+  };
+}
+
+function cleanPlayerMarkup(cover) {
+  return `<div class="yt-film">
+      ${cover ? `<img class="yt-film-cover" src="${cover}" alt="">` : ""}
+      <div class="yt-film-stage"></div>
+      <button type="button" class="yt-film-play"><span class="film-link-play" aria-hidden="true"></span></button>
+    </div>`;
+}
+
 const VideoModal = {
   el: null, lastFocus: null,
   build() {
@@ -97,17 +187,20 @@ const VideoModal = {
     if (!this.el) this.build();
     this.lastFocus = document.activeElement;
     this.el.querySelector("#vmodal-title").textContent = title;
-    this.el.querySelector("#vmodal-frame").innerHTML = id
-      ? `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1"
-           title="${esc(title)}" allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-           referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
-      : `<div class="vmodal-soon">${icon("play")}<strong>Video coming soon</strong><p>This training video is being produced. Check back shortly.</p></div>`;
+    const frame = this.el.querySelector("#vmodal-frame");
+    if (id) {
+      frame.innerHTML = cleanPlayerMarkup("");
+      this.player = cleanPlayer(frame.querySelector(".yt-film"), id, { label: title, autostart: true });
+    } else {
+      frame.innerHTML = `<div class="vmodal-soon">${icon("play")}<strong>Video coming soon</strong><p>This training video is being produced. Check back shortly.</p></div>`;
+    }
     this.el.hidden = false;
     document.body.classList.add("no-scroll");
     this.el.querySelector(".vmodal-close").focus();
   },
   close() {
     this.el.hidden = true;
+    if (this.player) { this.player.destroy(); this.player = null; }
     this.el.querySelector("#vmodal-frame").innerHTML = ""; // stops playback
     document.body.classList.remove("no-scroll");
     if (this.lastFocus) this.lastFocus.focus();
@@ -135,7 +228,7 @@ function photoSlot(serial, iconName, extraClass = "") {
 }
 
 function addButton(serial, label = "Add to order") {
-  if (!isSold(serial)) return `<span class="tag">Included with the Black KIDAN</span>`;
+  if (!isSold(serial)) return `<span class="tag">Included with the bag</span>`;
   return `<button type="button" class="btn btn-add" data-add="${esc(serial)}">${esc(label)}</button>`;
 }
 
@@ -161,7 +254,7 @@ function itemCard(item) {
 
 /* Card for one of the three bags */
 function bagCard(bag) {
-  const count = bagContents(bag).length;
+  const count = packingCount(bag);
   return `<article class="bag-card${bag.includes ? " featured" : ""}">
     <a href="${detailUrl(bag.serial)}" tabindex="-1" aria-hidden="true">${photoSlot(bag.serial, bag.icon)}</a>
     <div class="bag-body">
@@ -308,3 +401,86 @@ function buildFooter() {
 buildHeader();
 buildFooter();
 Store.ready.then(updateOrderBadge);
+
+/* ---------- Phone helpers ---------- */
+// Height of the sticky header, so sticky bars can sit right under it
+function setHeaderHeight() {
+  const h = document.getElementById("site-header");
+  if (h) document.documentElement.style.setProperty("--header-h", h.offsetHeight + "px");
+}
+setHeaderHeight();
+addEventListener("resize", setHeaderHeight);
+addEventListener("load", setHeaderHeight);
+
+// Back-to-top button, shown once the visitor has scrolled down
+(function backToTop() {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "to-top";
+  b.hidden = true;
+  b.setAttribute("aria-label", "Back to top");
+  b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14l6-6 6 6"/></svg>';
+  b.addEventListener("click", () => scrollTo({ top: 0, behavior: "smooth" }));
+  document.body.appendChild(b);
+  // Shows only while scrolling back up (so it never sits over a button while reading),
+  // then hides again after a few seconds.
+  let lastY = scrollY, timer = null, waiting = false;
+  addEventListener("scroll", () => {
+    if (waiting) return;
+    waiting = true;
+    requestAnimationFrame(() => {
+      const y = scrollY;
+      if (y < innerHeight * 1.5) b.hidden = true;
+      else if (y < lastY - 4) {
+        b.hidden = false;
+        clearTimeout(timer);
+        timer = setTimeout(() => { b.hidden = true; }, 2500);
+      } else if (y > lastY + 4) b.hidden = true;
+      lastY = y;
+      waiting = false;
+    });
+  }, { passive: true });
+})();
+
+// Dots under a sideways-swipe row (used for the bags on phones)
+function swipeDots(row) {
+  if (!row) return;
+  const old = row.nextElementSibling;
+  if (old && old.classList.contains("swipe-dots")) old.remove();
+  const cards = [...row.children];
+  if (cards.length < 2) return;
+  const dots = document.createElement("div");
+  dots.className = "swipe-dots";
+  dots.innerHTML = cards.map((c, i) => `<button type="button" aria-label="Show card ${i + 1} of ${cards.length}"></button>`).join("");
+  row.after(dots);
+  const update = () => {
+    const max = row.scrollWidth - row.clientWidth;
+    const idx = max <= 0 ? 0 : Math.round(row.scrollLeft / max * (cards.length - 1));
+    [...dots.children].forEach((d, i) => d.classList.toggle("on", i === idx));
+  };
+  dots.addEventListener("click", e => {
+    const i = [...dots.children].indexOf(e.target.closest("button"));
+    if (i >= 0) row.scrollTo({ left: cards[i].offsetLeft - cards[0].offsetLeft, behavior: "smooth" });
+  });
+  row.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+  update();
+}
+
+// "Jump to" bar: highlights the section on screen and keeps its button visible
+(function jumpBar() {
+  const bar = document.querySelector(".subnav-bar .subnav");
+  if (!bar || !("IntersectionObserver" in window)) return;
+  const links = [...bar.querySelectorAll('a[href^="#"]')];
+  const sections = links.map(a => document.getElementById(a.getAttribute("href").slice(1))).filter(Boolean);
+  const mark = id => links.forEach(a => {
+    const on = a.getAttribute("href") === "#" + id;
+    if (on && a.getAttribute("aria-current") !== "true") {
+      bar.scrollTo({ left: a.offsetLeft - bar.offsetLeft - 16, behavior: "smooth" });
+    }
+    if (on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+  });
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if (en.isIntersecting) mark(en.target.id); });
+  }, { rootMargin: "-35% 0px -60% 0px" });
+  sections.forEach(s => io.observe(s));
+})();

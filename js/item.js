@@ -5,9 +5,9 @@ const sn = new URLSearchParams(location.search).get("sn");
 
 function buyBox(serial, opts = {}) {
   if (!isSold(serial)) {
-    const p = pouchOf(serial);
+    const ps = pouchesOf(serial);
     return `<div class="buy-box"><span class="serial">Availability</span>
-      <p>Included with the ${p ? `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>` : "Go-Bag"} and the KIDAN 72 Preparedness Go-Bag. Not sold separately.</p></div>`;
+      <p>Included with the ${ps.length ? ps.map(p => `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>`).join(" and the ") : "Go-Bag"} and the KIDAN 72 Preparedness Go-Bag. Not sold separately.</p></div>`;
   }
   return `<div class="buy-box">
     <span class="serial">${opts.label || "Price"}</span>
@@ -28,12 +28,39 @@ function contentsList(serials) {
   return `<div class="contents-list">${serials.map(s => {
     const it = findItem(s);
     if (!it) return "";
+    const parts = it.parts && it.parts.length
+      ? `<span class="ci-parts">${it.parts.map(p => `<span>${esc(p)}</span>`).join("")}</span>` : "";
     return `<a href="${detailUrl(s)}">
       <span class="ci">${icon(it.icon)}</span>
-      <span><strong>${esc(it.name)}</strong><span class="serial">${s}</span></span>
+      <span><strong>${esc(it.name)}</strong><span class="serial">${esc(s)}</span>${parts}</span>
       <span class="serial">${isSold(s) ? "" : "Bag only"}</span>
     </a>`;
   }).join("")}</div>`;
+}
+
+/* Pouch contents grouped by category. Each group opens with a tap;
+   on phones they start closed so the page stays short. */
+function groupedContents(serials) {
+  const groups = {};
+  serials.forEach(s => { const it = findItem(s); if (it) (groups[it.cat] = groups[it.cat] || []).push(s); });
+  const open = matchMedia("(max-width: 640px)").matches ? "" : " open";
+  return `<div class="contents-tools"><button type="button" data-toggle-all>Open all</button></div>
+    <div class="cat-groups">${Object.keys(KIDAN.categories).filter(c => groups[c]).map(c => `
+    <details class="cat-group"${open}>
+      <summary>${esc(KIDAN.categories[c])}<span class="n">${groups[c].length} ${groups[c].length === 1 ? "item" : "items"}</span></summary>
+      ${contentsList(groups[c])}
+    </details>`).join("")}</div>`;
+}
+
+function wireGroups() {
+  document.querySelectorAll("[data-toggle-all]").forEach(btn => {
+    const box = btn.parentElement.nextElementSibling;
+    const groups = [...box.querySelectorAll("details")];
+    const label = () => { btn.textContent = groups.every(d => d.open) ? "Close all" : "Open all"; };
+    btn.addEventListener("click", () => { const openAll = !groups.every(d => d.open); groups.forEach(d => { d.open = openAll; }); label(); });
+    groups.forEach(d => d.addEventListener("toggle", label));
+    label();
+  });
 }
 
 function wireBuy(serial) {
@@ -65,9 +92,9 @@ function renderBag(bag) {
   const next = KIDAN.bags[(i + 1) % KIDAN.bags.length];
   const contents = bag.includes
     ? bag.includes.map(p => { const pouch = findBag(p); return `<div class="pouch-group">
-        <div class="section-head split" style="margin:0"><h3><a href="${detailUrl(pouch.serial)}" style="text-decoration:none">${esc(pouch.name)}</a></h3><span class="serial">${esc(pouch.serial)} · ${pouch.contents.length} items</span></div>
-        ${contentsList(pouch.contents)}</div>`; }).join("")
-    : contentsList(bag.contents);
+        <div class="section-head split" style="margin:0"><h3><a href="${detailUrl(pouch.serial)}" style="text-decoration:none">${esc(pouch.name)}</a></h3><span class="serial">${esc(pouch.serial)} · ${packingCount(pouch)} items</span></div>
+        ${groupedContents(pouch.contents)}</div>`; }).join("")
+    : groupedContents(bag.contents);
 
   root.innerHTML = `
     <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="gobag.html">Go-Bag</a> / ${esc(bag.serial)}</nav>
@@ -81,7 +108,7 @@ function renderBag(bag) {
         <dl class="spec-table">
           <div><dt>Serial no.</dt><dd class="serial" style="color:var(--ink)">${esc(bag.serial)}</dd></div>
           ${bag.specs.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}
-          <div><dt>Items</dt><dd>${bagContents(bag).length} serialised items</dd></div>
+          <div><dt>Items</dt><dd>${packingCount(bag)} items</dd></div>
         </dl>
       </div>
     </div>
@@ -94,6 +121,7 @@ function renderBag(bag) {
       <a href="${detailUrl(next.serial)}"><span class="serial">${esc(next.serial)} →</span><strong>${esc(next.name)}</strong></a>
     </div>`;
   wireBuy(bag.serial);
+  wireGroups();
 }
 
 /* ---------- Item page ---------- */
@@ -102,7 +130,7 @@ function renderItem(it) {
   const prev = KIDAN.items[(idx - 1 + KIDAN.items.length) % KIDAN.items.length];
   const next = KIDAN.items[(idx + 1) % KIDAN.items.length];
   const module = KIDAN.modules.find(m => m.items.includes(it.serial));
-  const pouch = pouchOf(it.serial);
+  const pouches = pouchesOf(it.serial);
   document.title = `${esc(it.name)} (${esc(it.serial)}) — KIDAN 72`;
 
   root.innerHTML = `
@@ -120,8 +148,8 @@ function renderItem(it) {
         <dl class="spec-table">
           <div><dt>Serial no.</dt><dd class="serial" style="color:var(--ink)">${esc(it.serial)}</dd></div>
           <div><dt>Category</dt><dd>${esc(KIDAN.categories[it.cat])}</dd></div>
-          ${pouch ? `<div><dt>Packed in</dt><dd><a href="${detailUrl(pouch.serial)}">${esc(pouch.name)}</a> · Preparedness Go-Bag</dd></div>` : ""}
-          <div><dt>Specification</dt><dd>${esc(it.spec)}</dd></div>
+          ${pouches.length ? `<div><dt>Packed in</dt><dd>${pouches.map(p => `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>`).join(" and ")} · Preparedness Go-Bag</dd></div>` : ""}
+          ${it.parts && it.parts.length ? `<div><dt>Kit contents</dt><dd>${it.parts.map(esc).join(" · ")}</dd></div>` : `<div><dt>Specification</dt><dd>${esc(it.spec)}</dd></div>`}
           <div><dt>Maintenance</dt><dd>${esc(it.maintain)}</dd></div>
           ${module ? `<div><dt>Training</dt><dd><a href="training.html#module-${esc(module.code)}">Module ${esc(module.code)} · ${esc(module.name)}</a></dd></div>` : ""}
         </dl>
@@ -143,6 +171,33 @@ function renderItem(it) {
       <a href="${detailUrl(next.serial)}"><span class="serial">${esc(next.serial)} →</span><strong>${esc(next.name)}</strong></a>
     </div>`;
   wireBuy(it.serial);
+  wireGallery(it);
+}
+
+/* Extra photos (photos: 2 in js/data.js → <serial>-2.jpg) shown as thumbnails */
+function wireGallery(it) {
+  const count = Number(it.photos) || 1;
+  if (count < 2) return;
+  const frame = root.querySelector(".detail .frame");
+  const main = frame && frame.querySelector(".photo img");
+  if (!main) return;
+  const srcs = Array.from({ length: count }, (_, i) =>
+    "assets/img/products/" + encodeURIComponent(it.serial) + (i ? "-" + (i + 1) : "") + ".jpg");
+  const strip = document.createElement("div");
+  strip.className = "thumbs";
+  strip.innerHTML = srcs.map((src, i) =>
+    `<button type="button" aria-label="Photo ${i + 1} of ${count}"${i ? "" : ' aria-current="true"'}><img src="${src}" alt="" loading="lazy"></button>`).join("");
+  // keep the photo and its thumbnails together in the left column
+  const col = document.createElement("div");
+  frame.parentNode.insertBefore(col, frame);
+  col.append(frame, strip);
+  strip.addEventListener("click", e => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    main.src = b.querySelector("img").getAttribute("src");
+    strip.querySelectorAll("button").forEach(x => x.removeAttribute("aria-current"));
+    b.setAttribute("aria-current", "true");
+  });
 }
 
 Store.ready.then(() => {

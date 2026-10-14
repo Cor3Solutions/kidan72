@@ -8,7 +8,7 @@ PAGES
   index.html      Home
   about.html      About (contact details are at the bottom of this page)
   system.html     The System (Database, Family, Typhoon, Flood, 72-Hour, Community, Standard)
-  gobag.html      The Go-Bag: the 3 bags + all 22 individual items
+  gobag.html      The Kit: the 3 bags + all 39 individual items
   item.html       Detail page for one bag or item (opened from the Go-Bag page)
   order.html      My Order: the customer's order list and the "Send" buttons
   training.html   Training Modules A to J
@@ -26,31 +26,52 @@ FOLDERS
 
 ADDING PRODUCT PHOTOS
 Name each photo with the item's serial number and save it in assets/img/products/
-  Complete Go-Bag ...... K72-BAG-000.jpg
-  Black Pouch .......... K72-BAG-001.jpg
-  Coyote Brown Pouch ... K72-BAG-002.jpg
-  Water Container ...... K72-WTR-001.jpg
-  Water Purification ... K72-WTR-002.jpg
-  Emergency Food ....... K72-FOD-001.jpg
-  First-Aid Kit ........ K72-MED-001.jpg
-  Medicine Pouch ....... K72-MED-002.jpg
-  Headlamp ............. K72-LGT-001.jpg
-  Flashlight ........... K72-LGT-002.jpg
-  Power Bank ........... K72-PWR-001.jpg
-  Batteries & Cables ... K72-PWR-002.jpg
-  Emergency Radio ...... K72-COM-001.jpg
-  Phone Readiness Card . K72-COM-002.jpg
-  Signal Whistle ....... K72-COM-003.jpg
-  Document Pouch ....... K72-DOC-001.jpg
-  Cash & Contact Card .. K72-DOC-002.jpg
-  Rain Poncho .......... K72-WTH-001.jpg
-  Tarp Shelter ......... K72-WTH-002.jpg
-  Thermal Blanket ...... K72-WTH-003.jpg
-  Hygiene Kit .......... K72-HYG-001.jpg
-  Multi-Tool ........... K72-TLS-001.jpg
-  Rope & Carabiner ..... K72-TLS-002.jpg
-  Fire Starter Set ..... K72-TLS-003.jpg
-  Compass & Map ........ K72-NAV-001.jpg
+  KIDAN 72 Preparedness Go-Bag .......... K72-BAG-000.jpg
+  Black KIDAN ........................... K72-BAG-001.jpg
+  Coyote KIDAN .......................... K72-BAG-002.jpg
+  Water Purifying Kit ................... K72-WTR-001.jpg
+  Collapsible Silicone Cup .............. K72-WTR-002.jpg
+  Collapsible Metal Cup ................. K72-WTR-003.jpg
+  Shelf-Stable Food (MRE) ............... K72-FOD-001.jpg
+  Honey ................................. K72-FOD-002.jpg
+  Salt .................................. K72-FOD-003.jpg
+  Salt Pouch ............................ K72-FOD-004.jpg
+  Tactical Spoon (Black) ................ K72-FOD-005.jpg
+  Folding Spoon ......................... K72-FOD-006.jpg
+  First Aid Kit ......................... K72-MED-001.jpg
+  Ointment .............................. K72-MED-002.jpg
+  Headlamp (Warsun) ..................... K72-LGT-001.jpg
+  Rechargeable Flashlight (USB) ......... K72-LGT-002.jpg
+  Glow Stick ............................ K72-LGT-003.jpg
+  Rechargeable Power Bank (20,000 mA .... K72-PWR-001.jpg
+  Multi-Port Charging Cable ............. K72-PWR-002.jpg
+  Solar / USB Power Bank ................ K72-PWR-003.jpg
+  Power Bank (10,000 mAh) ............... K72-PWR-004.jpg
+  Whistle with Compass .................. K72-COM-001.jpg
+  Waterproof Phone Pouch ................ K72-COM-002.jpg
+  Notebook (A7) ......................... K72-DOC-001.jpg
+  Pencil ................................ K72-DOC-002.jpg
+  Waterproof Zip Bags (L) ............... K72-DOC-003.jpg
+  Emergency Thermal Blanket ............. K72-WTH-001.jpg
+  Lightweight Rain Poncho ............... K72-WTH-002.jpg
+  Heavy-Duty Garbage Bags (3XL) ......... K72-WTH-003.jpg
+  2-Person Tent ......................... K72-WTH-004.jpg
+  Sleeping Bag .......................... K72-WTH-005.jpg
+  Compressed Towel (70 × 140 cm) ........ K72-HYG-001.jpg
+  Urine Bags ............................ K72-HYG-002.jpg
+  Floss (Robinson's) .................... K72-HYG-003.jpg
+  Wipes ................................. K72-HYG-004.jpg
+  Toothbrush Set ........................ K72-HYG-005.jpg
+  Disposable Razor ...................... K72-HYG-006.jpg
+  Nail Clipper .......................... K72-HYG-007.jpg
+  Compact Multi-Tool .................... K72-TLS-001.jpg
+  Folding Scissors (Stainless) .......... K72-TLS-002.jpg
+  Paracord .............................. K72-TLS-003.jpg
+  Zip Ties .............................. K72-TLS-004.jpg
+  Fishing Kit ........................... K72-SRV-001.jpg
+  Trap Kit .............................. K72-SRV-002.jpg
+  Fire Starter Kit ...................... K72-SRV-003.jpg
+  Slingshot ............................. K72-SRV-004.jpg
 Use landscape photos (4:3 works best). The photo replaces the "Photo coming soon" box automatically.
 
 ADDING YOUR YOUTUBE VIDEOS
