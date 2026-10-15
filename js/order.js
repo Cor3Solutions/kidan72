@@ -45,7 +45,7 @@ function renderLines() {
     </div>`;
 
   document.getElementById("sum-rows").innerHTML = lines.map(l =>
-    `<div style="display:flex;justify-content:space-between;gap:12px;font-size:15px"><span>${l.qty} × ${esc(l.item.name)}</span><span>${l.unit == null ? "PHP xx" : peso(l.unit * l.qty)}</span></div>`).join("");
+    `<div style="display:flex;justify-content:space-between;gap:12px;font-size:15px"><span>${l.qty} × ${esc(l.item.name)}</span><span style="white-space:nowrap">${l.unit == null ? "PHP xx" : peso(l.unit * l.qty)}</span></div>`).join("");
   document.getElementById("sum-total").textContent = peso(Order.total());
 }
 
@@ -78,23 +78,42 @@ function customerDetails() {
   };
 }
 
+/* The message the customer sends us. Plain text with short lines,
+   so it reads cleanly in Messenger, Viber and email. */
 function orderMessage(orderNo) {
   const d = customerDetails();
   const lines = Order.lines();
-  const rows = lines.map(l => `• ${l.qty} × ${l.item.name} (${l.sn}) — ${l.unit == null ? "PHP xx" : peso(l.unit * l.qty)}`);
-  return [
-    "KIDAN 72 ORDER",
-    orderNo ? `Order no.: ${orderNo}` : "",
+  const items = lines.map((l, i) => [
+    `${i + 1}. ${l.item.name}`,
+    `    Qty: ${l.qty}  |  ${l.unit == null ? "PHP xx" : peso(l.unit * l.qty)}`,
+    `    Serial: ${l.sn}`
+  ].join("\n"));
+  const count = lines.reduce((n, l) => n + l.qty, 0);
+  const out = [
+    "Hi KIDAN 72! I would like to order:",
+    orderNo ? `Order no.: ${orderNo}` : null,
     "",
-    ...rows,
+    items.join("\n\n"),
     "",
+    "--------------------",
+    `Total items: ${count}`,
     `Estimated total: ${peso(Order.total())}`,
+    "--------------------",
     "",
-    `Name: ${d.name || ""}`,
-    `Mobile: ${d.mobile || ""}`,
-    d.address ? `Delivery: ${d.address}` : "",
-    d.notes ? `Notes: ${d.notes}` : ""
-  ].filter((line, i, arr) => !(line === "" && arr[i - 1] === "")).join("\n").trim();
+    "MY DETAILS",
+    `Name: ${d.name}`,
+    `Mobile: ${d.mobile}`,
+    d.address ? `Delivery address: ${d.address}` : null,
+    d.notes ? `Notes: ${d.notes}` : null,
+    "",
+    "Thank you!"
+  ];
+  return out.filter(x => x !== null).join("\n");
+}
+
+function updatePreview() {
+  const pre = document.getElementById("msg-preview");
+  if (pre) pre.textContent = Order.lines().length ? orderMessage("") : "";
 }
 
 function validate() {
@@ -150,13 +169,15 @@ async function saveToDatabase(channel) {
 function renderSend() {
   const c = KIDAN.contact;
   const btns = [];
-  if (c.messenger) btns.push(`<button type="button" class="btn btn-primary" data-send="messenger">Send on Messenger</button>`);
+  if (c.messenger) btns.push(`<button type="button" class="btn btn-primary" data-send="messenger">Send on Facebook Messenger</button>`);
   if (c.viber) btns.push(`<button type="button" class="btn btn-dark" data-send="viber">Send on Viber</button>`);
   if (c.email) btns.push(`<button type="button" class="btn btn-ghost" data-send="email">Send by email</button>`);
   btns.push(`<button type="button" class="btn ${btns.length ? "btn-ghost" : "btn-primary"}" data-send="copy">Copy order list</button>`);
   sendEl.innerHTML = btns.join("") +
-    (c.messenger ? `<p class="fineprint">Messenger opens our page with your order copied. Just paste it in the chat and send.</p>`
-                 : `<p class="fineprint">Copy your order list and send it to us through any of our contact channels on the <a href="about.html#contact">About page</a>.</p>`);
+    (c.messenger ? `<p class="fineprint">Your order is copied, then our Facebook page opens in Messenger. Paste it in the chat (press and hold, then Paste) and send.</p>`
+                 : `<p class="fineprint">Copy your order list and send it to us through any of our contact channels on the <a href="about.html#contact">About page</a>.</p>`) +
+    `<details class="msg-preview"><summary>Preview your message</summary><pre id="msg-preview"></pre></details>`;
+  updatePreview();
 }
 
 sendEl.addEventListener("click", async e => {
@@ -176,8 +197,11 @@ sendEl.addEventListener("click", async e => {
   }
   if (how === "messenger") {
     const ok = await copyText(text);
-    toast(ok ? "Order copied. Paste it in the Messenger chat and send." : "Messenger is opening. Please copy your order list from this page.");
-    window.location.href = "https://m.me/" + encodeURIComponent(c.messenger.replace(/^@/, ""));
+    toast(ok ? "Order copied. Paste it in the Messenger chat and send." : "Messenger is opening. Please copy your order list from the preview on this page.");
+    const url = "https://m.me/" + encodeURIComponent(c.messenger.replace(/^@/, ""));
+    // Phones open the Messenger app; computers open Messenger in a new tab so this page stays open
+    const phone = matchMedia("(max-width: 900px), (pointer: coarse)").matches;
+    if (phone || !window.open(url, "_blank", "noopener")) window.location.href = url;
     return;
   }
   if (how === "viber") {
@@ -189,6 +213,9 @@ sendEl.addEventListener("click", async e => {
     window.location.href = `mailto:${c.email}?subject=${encodeURIComponent("KIDAN 72 Order")}&body=${encodeURIComponent(text)}`;
   }
 });
+
+document.addEventListener("order:change", updatePreview);
+form.addEventListener("input", updatePreview);
 
 Store.ready.then(() => {
   renderLines();

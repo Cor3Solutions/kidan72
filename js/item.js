@@ -7,7 +7,7 @@ function buyBox(serial, opts = {}) {
   if (!isSold(serial)) {
     const ps = pouchesOf(serial);
     return `<div class="buy-box"><span class="serial">Availability</span>
-      <p>Included with the ${ps.length ? ps.map(p => `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>`).join(" and the ") : "Go-Bag"} and the KIDAN 72 Preparedness Go-Bag. Not sold separately.</p></div>`;
+      <p>Included with the ${ps.length ? ps.map(p => `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>`).join(" and the ") : "Go-Bag"} and the KIDAN 72 Preparedness Bag. Not sold separately.</p></div>`;
   }
   return `<div class="buy-box">
     <span class="serial">${opts.label || "Price"}</span>
@@ -122,6 +122,7 @@ function renderBag(bag) {
     </div>`;
   wireBuy(bag.serial);
   wireGroups();
+  wireGallery(bag);
 }
 
 /* ---------- Item page ---------- */
@@ -143,12 +144,12 @@ function renderItem(it) {
       <div class="detail-info">
         <span class="eyebrow">${esc(KIDAN.categories[it.cat])}</span>
         <h1>${esc(it.name)}</h1>
-        <p class="lede">${esc(it.short)}</p>
+        ${it.short ? `<p class="lede">${esc(it.short)}</p>` : ""}
         ${buyBox(it.serial, { label: "Price per piece" })}
         <dl class="spec-table">
           <div><dt>Serial no.</dt><dd class="serial" style="color:var(--ink)">${esc(it.serial)}</dd></div>
           <div><dt>Category</dt><dd>${esc(KIDAN.categories[it.cat])}</dd></div>
-          ${pouches.length ? `<div><dt>Packed in</dt><dd>${pouches.map(p => `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>`).join(" and ")} · Preparedness Go-Bag</dd></div>` : ""}
+          ${pouches.length ? `<div><dt>Packed in</dt><dd>${pouches.map(p => `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>`).join(" and ")} · Preparedness Bag</dd></div>` : ""}
           ${it.parts && it.parts.length ? `<div><dt>Kit contents</dt><dd>${it.parts.map(esc).join(" · ")}</dd></div>` : `<div><dt>Specification</dt><dd>${esc(it.spec)}</dd></div>`}
           <div><dt>Maintenance</dt><dd>${esc(it.maintain)}</dd></div>
           ${module ? `<div><dt>Training</dt><dd><a href="training.html#module-${esc(module.code)}">Module ${esc(module.code)} · ${esc(module.name)}</a></dd></div>` : ""}
@@ -176,7 +177,7 @@ function renderItem(it) {
 
 /* Extra photos (photos: 2 in js/data.js → <serial>-2.jpg) shown as thumbnails */
 function wireGallery(it) {
-  const count = Number(it.photos) || 1;
+  const count = it.photo === false ? 1 : Number(it.photos) || 1;
   if (count < 2) return;
   const frame = root.querySelector(".detail .frame");
   const main = frame && frame.querySelector(".photo img");

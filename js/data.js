@@ -6,9 +6,9 @@
    serial number, e.g.  K72-WTR-001.jpg
    Extra photos of the same item: K72-SRV-001-2.jpg, K72-SRV-001-3.jpg ...
    and add  photos: 2  (or 3 ...) to that item below.
-   Bag photos: K72-BAG-000.jpg (KIDAN 72 Preparedness Go-Bag),
-               K72-BAG-001.jpg (Black KIDAN),
-               K72-BAG-002.jpg (Coyote KIDAN)
+   Bag photos: K72-BAG-000.jpg (KIDAN 72 Preparedness Bag),
+               K72-BAG-001.jpg (KIDAN Black),
+               K72-BAG-002.jpg (KIDAN Brown)
    Photos appear on the site automatically once the file exists.
 
    VIDEOS: paste your YouTube link into "video" for any item or
@@ -27,9 +27,9 @@ const KIDAN = {};
    --------------------------------------------------------- */
 KIDAN.prices = {
   // Bags
-  "K72-BAG-000": null,   // KIDAN 72 Preparedness Go-Bag
-  "K72-BAG-001": null,   // Black KIDAN
-  "K72-BAG-002": null,   // Coyote KIDAN
+  "K72-BAG-000": null,   // KIDAN 72 Preparedness Bag
+  "K72-BAG-001": null,   // KIDAN Black
+  "K72-BAG-002": null,   // KIDAN Brown
   // Individual items
   "K72-WTR-001": null,   // Water Purifying Kit
   "K72-WTR-002": null,   // Collapsible Silicone Cup
@@ -37,18 +37,15 @@ KIDAN.prices = {
   "K72-FOD-001": null,   // Shelf-Stable Food (MRE)
   "K72-FOD-002": null,   // Honey
   "K72-FOD-003": null,   // Salt
-  "K72-FOD-004": null,   // Salt Pouch
   "K72-FOD-005": null,   // Tactical Spoon (Black)
   "K72-FOD-006": null,   // Folding Spoon
   "K72-MED-001": null,   // First Aid Kit
-  "K72-MED-002": null,   // Ointment
   "K72-LGT-001": null,   // Headlamp (Warsun)
   "K72-LGT-002": null,   // Rechargeable Flashlight (USB)
   "K72-LGT-003": null,   // Glow Stick
   "K72-PWR-001": null,   // Rechargeable Power Bank (20,000 mAh)
   "K72-PWR-002": null,   // Multi-Port Charging Cable
   "K72-PWR-003": null,   // Solar / USB Power Bank
-  "K72-PWR-004": null,   // Power Bank (10,000 mAh)
   "K72-COM-001": null,   // Whistle with Compass
   "K72-COM-002": null,   // Waterproof Phone Pouch
   "K72-DOC-001": null,   // Notebook (A7)
@@ -63,17 +60,13 @@ KIDAN.prices = {
   "K72-HYG-002": null,   // Urine Bags
   "K72-HYG-003": null,   // Floss (Robinson's)
   "K72-HYG-004": null,   // Wipes
-  "K72-HYG-005": null,   // Toothbrush Set
-  "K72-TLS-001": null,   // Compact Multi-Tool
   "K72-TLS-002": null,   // Folding Scissors (Stainless)
   "K72-TLS-003": null,   // Paracord
   "K72-TLS-004": null,   // Zip Ties
   "K72-SRV-001": null,   // Fishing Kit
   "K72-SRV-002": null,   // Trap Kit
   "K72-SRV-003": null,  // Fire Starter Kit
-  "K72-SRV-004": null,  // Slingshot
-  "K72-HYG-006": null,  // Disposable Razor
-  "K72-HYG-007": null   // Nail Clipper
+  "K72-SRV-004": null  // Slingshot
 };
 
 /* ---------------------------------------------------------
@@ -84,9 +77,10 @@ KIDAN.prices = {
       email:     e.g. "orders@kidan72.ph"
    --------------------------------------------------------- */
 KIDAN.contact = {
-  messenger: "",
+  messenger: "61595025759237",   // Facebook page ID (from facebook.com/profile.php?id=61595025759237)
+  facebook: "https://www.facebook.com/profile.php?id=61595025759237",
   viber: "",
-  email: ""
+  email: "kidan72gobag@gmail.com"
 };
 
 /* ---------------------------------------------------------
@@ -94,6 +88,19 @@ KIDAN.contact = {
    Plays on the homepage and from the "Watch the film" button.
    --------------------------------------------------------- */
 KIDAN.brandFilm = "https://youtu.be/_H-cqF8l8lw";
+
+/* ---------------------------------------------------------
+   KIT PAGE SLIDESHOW — the big photo at the top of the Kit page.
+   Save the photos in assets/img/kit/ with these names.
+   A slide whose photo is not there yet is skipped automatically
+   (slide 1 shows the current kit photo until its own photo arrives).
+   --------------------------------------------------------- */
+KIDAN.kitSlides = [
+  { src: "assets/img/kit/1-all-items.jpg",   fallback: "assets/img/photo-kit.jpg", caption: "All items" },
+  { src: "assets/img/kit/2-kidan-black.jpg", caption: "KIDAN Black · all items" },
+  { src: "assets/img/kit/3-kidan-brown.jpg", caption: "KIDAN Brown · all items" },
+  { src: "assets/img/kit/4-backpack.jpg",    caption: "Preparedness Bag · with both pouches" }
+];
 
 KIDAN.categories = {
   WTR: "Water & Hydration",
@@ -117,38 +124,38 @@ KIDAN.categories = {
    --------------------------------------------------------- */
 KIDAN.bags = [
   {
-    serial: "K72-BAG-000", icon: "bag", name: "KIDAN 72 Preparedness Go-Bag", label: "Complete system",
-    short: "The full 72-hour system: the main carry bag with the Black KIDAN and the Coyote KIDAN packed inside.",
-    summary: "Everything one person needs for the first 72 hours after a typhoon, flood or evacuation. The main carry bag holds the Black KIDAN and the Coyote KIDAN, so you can grab the whole system at once or split it between family members.",
+    serial: "K72-BAG-000", icon: "bag", name: "KIDAN 72 Preparedness Bag", label: "Complete system",
+    short: "The full 72-hour system: the primary bag with the KIDAN Black and the KIDAN Brown packed inside.",
+    summary: "Everything one person needs for the first 72 hours after a typhoon, flood or evacuation. The primary bag holds the KIDAN Black and the KIDAN Brown, so you can grab the whole system at once or split it between family members.",
     includes: ["K72-BAG-001", "K72-BAG-002"],
     specs: [
-      ["Configuration", "Main carry bag + Black KIDAN + Coyote KIDAN"],
+      ["Configuration", "Primary bag + KIDAN Black + KIDAN Brown"],
       ["Coverage", "1 person · 72 hours"],
-      ["Contents", "Everything in the Black KIDAN and the Coyote KIDAN"],
+      ["Contents", "Everything in the KIDAN Black and the KIDAN Brown"],
       ["Registration", "Logged in the KIDAN 72 Database with owner profile, inventory and expiry dates"],
       ["Inspection", "Monthly function check · Quarterly full inspection"]
     ]
   },
   {
-    serial: "K72-BAG-001", icon: "aid", name: "Black KIDAN", label: "Sustainment module",
-    short: "Contains your medical kit, food, electronic needs and documents.",
-    summary: "Contains your medical kit, food, electronic needs and documents: everything that keeps you fed, treated and connected, plus the papers you need after an evacuation.",
-    contents: ["K72-MED-001", "K72-WTR-002", "K72-LGT-001", "K72-WTH-001", "K72-WTH-002", "K72-HYG-001", "K72-PWR-002", "K72-COM-002", "K72-DOC-001", "K72-DOC-002", "K72-FOD-001", "K72-FOD-002", "K72-FOD-005", "K72-MED-002", "K72-PWR-001", "K72-HYG-002", "K72-HYG-003", "K72-HYG-004", "K72-HYG-005", "K72-HYG-006", "K72-HYG-007", "K72-PWR-004", "K72-LGT-003"],
+    serial: "K72-BAG-001", icon: "aid", name: "KIDAN Black", label: "Sustainment module", photos: 2,
+    short: "Medical kit, food, electronic needs and documents.",
+    summary: "Medical kit, food, electronic needs and documents: everything that keeps you fed, treated and connected, plus the papers you need after an evacuation.",
+    contents: ["K72-MED-001", "K72-WTR-002", "K72-LGT-001", "K72-WTH-001", "K72-WTH-002", "K72-HYG-001", "K72-PWR-002", "K72-COM-002", "K72-DOC-001", "K72-DOC-002", "K72-FOD-001", "K72-FOD-002", "K72-FOD-005", "K72-PWR-001", "K72-HYG-002", "K72-HYG-003", "K72-HYG-004", "K72-LGT-003"],
     specs: [
       ["Role", "Medical kit, food, electronic needs and documents"],
       ["Colour", "Black"],
-      ["Carry", "Inside the Preparedness Go-Bag, or on its own"]
+      ["Carry", "Inside the Preparedness Bag, or on its own"]
     ]
   },
   {
-    serial: "K72-BAG-002", icon: "tool", name: "Coyote KIDAN", label: "Field module",
-    short: "Contains your tools and gear.",
-    summary: "Contains your tools and gear: everything for darkness, rain, shelter and moving safely.",
-    contents: ["K72-LGT-002", "K72-WTH-001", "K72-COM-001", "K72-WTH-003", "K72-DOC-003", "K72-TLS-001", "K72-PWR-003", "K72-SRV-001", "K72-SRV-002", "K72-SRV-003", "K72-TLS-002", "K72-FOD-002", "K72-FOD-003", "K72-FOD-004", "K72-FOD-006", "K72-TLS-003", "K72-TLS-004", "K72-WTH-004", "K72-WTH-005", "K72-WTR-001", "K72-WTR-003", "K72-SRV-004"],
+    serial: "K72-BAG-002", icon: "tool", name: "KIDAN Brown", label: "Field module",
+    short: "Tools and gear.",
+    summary: "Tools and gear: everything for darkness, rain, shelter and moving safely.",
+    contents: ["K72-LGT-002", "K72-COM-001", "K72-WTH-003", "K72-DOC-003", "K72-PWR-003", "K72-SRV-001", "K72-SRV-002", "K72-SRV-003", "K72-TLS-002", "K72-FOD-002", "K72-FOD-003", "K72-FOD-006", "K72-TLS-003", "K72-TLS-004", "K72-WTH-004", "K72-WTH-005", "K72-WTR-001", "K72-WTR-003", "K72-SRV-004"],
     specs: [
       ["Role", "Tools and gear"],
-      ["Colour", "Coyote brown"],
-      ["Carry", "Inside the Preparedness Go-Bag, or on its own"]
+      ["Colour", "Brown"],
+      ["Carry", "Inside the Preparedness Bag, or on its own"]
     ]
   }
 ];
@@ -159,7 +166,7 @@ KIDAN.notSoldSeparately = [];
 /* Each item: serial is K72-<CAT>-<NNN>. "parts" lists what is inside a kit. */
 KIDAN.items = [
   { serial: "K72-WTR-001", cat: "WTR", icon: "filter", name: "Water Purifying Kit",
-    short: "Chlorine tablets in a sealed amber bottle, kept dry with silica gel, to make collected water safer to drink.",
+    short: "Chlorine tablets in an amber bottle, kept dry with silica gel, to make collected water safer to drink.",
     why: "Tap water and refilling stations can stop for days after a typhoon. Treating rainwater or well water lets you stretch your supply. Never drink floodwater, even after treatment.",
     steps: ["Collect the clearest water you can find and let any dirt settle.", "Pour it through a clean cloth into a clean container.", "Add chlorine tablets following the dose printed on the pack, then close the container.", "Wait the full time stated on the pack before drinking."],
     spec: "Amber bottle · Silica gel · Chlorine tablets", maintain: "Check the tablet expiry date every 6 months. Replace the silica gel if it changes colour or clumps.",
@@ -167,59 +174,52 @@ KIDAN.items = [
     q: "how to use chlorine tablets purify water emergency", video: "" },
 
   { serial: "K72-WTR-002", cat: "WTR", icon: "cup", name: "Collapsible Silicone Cup",
-    short: "A cup that folds flat, for drinking, measuring water and eating.",
+    short: "A cup that folds flat, for hot and cold drinks and food.",
     why: "Space in a go-bag is limited. A folding cup gives you a clean drinking vessel without taking room.",
     steps: ["Pull the cup open from the base until it locks into shape.", "Rinse it with clean water before first use.", "After use, wipe it dry and press it flat to pack it."],
     spec: "Food-grade silicone, folds flat", maintain: "Keep it clean and dry before packing to prevent mould.",
     q: "collapsible silicone cup camping", video: "" },
 
   { serial: "K72-WTR-003", cat: "WTR", icon: "cup", name: "Collapsible Metal Cup",
-    short: "A metal cup that collapses for packing and can sit near a flame to warm water.",
+    short: "For drinking and boiling water.",
     why: "Warm water and drinks help you stay comfortable at night and after getting wet. A metal cup can be used with your fire starter kit.",
     steps: ["Extend the cup to its full height before filling.", "To warm water, set it beside a small fire, not inside it, and hold it by the handle with a cloth.", "Let it cool before collapsing it back down."],
     spec: "Metal, collapsible", maintain: "Dry it fully after use to prevent rust or stains.",
     q: "collapsible metal cup camping", video: "" },
 
   { serial: "K72-FOD-001", cat: "FOD", icon: "food", name: "Shelf-Stable Food (MRE)",
-    short: "A ready-to-eat meal that keeps for a long time and needs no stove.",
+    short: "High-energy bar, shelf stable for 24 years.",
     why: "Electricity and LPG may be cut for days. Ready-to-eat food keeps your energy up without cooking.",
     steps: ["Check the expiry date when you pack it.", "Open the pack and follow the eating or heating instructions printed on it.", "Eat in a dry, clean spot and pack the wrapper away as rubbish."],
-    spec: "Ready-to-eat, long shelf life", maintain: "Log the expiry date and replace it at least one month before it expires.",
+    spec: "High-energy bar, 24-year shelf life", maintain: "Log the expiry date and replace it at least one month before it expires.",
     q: "MRE meal ready to eat how to use", video: "" },
 
   { serial: "K72-FOD-002", cat: "FOD", icon: "honey", name: "Honey",
-    short: "Bottled honey for quick energy. One is packed in each pouch.",
+    short: "Raw honey for quick energy.",
     why: "Honey gives fast energy when you are tired, cold or stressed, and it keeps for a very long time if sealed.",
     steps: ["Take a spoonful or two when you need quick energy.", "Close the bottle tightly after every use.", "Do not give honey to babies under one year old."],
     spec: "Sealed bottle", maintain: "Check the seal regularly. Honey can thicken over time, which is normal.",
     q: "honey emergency food energy", video: "" },
 
   { serial: "K72-FOD-003", cat: "FOD", icon: "salt", name: "Salt",
-    short: "A supply of salt for seasoning, preserving food and replacing salt lost through sweat.",
+    short: "A pack of sea salt for seasoning, preserving food and replacing salt lost through sweat.",
     why: "Hot, humid conditions and hard work make you sweat. Salt helps with taste and can preserve food you catch.",
     steps: ["Use a small pinch to season food.", "Keep it closed so it stays dry.", "Store it in the salt pouch to keep moisture out."],
     spec: "Food-grade salt", maintain: "Keep it sealed and dry. Replace it if it gets wet.",
     q: "salt survival uses", video: "" },
 
-  { serial: "K72-FOD-004", cat: "FOD", icon: "salt", name: "Salt Pouch",
-    short: "A small resealable pouch that keeps your salt dry and easy to carry.",
-    why: "Salt clumps and dissolves when it gets damp. A dedicated pouch keeps it usable.",
-    steps: ["Fill the pouch with salt and press out the air.", "Seal it fully before packing.", "Open only what you need, then reseal it."],
-    spec: "Resealable pouch", maintain: "Check that it still seals properly. Replace it if torn.",
-    q: "", video: "" },
-
   { serial: "K72-FOD-005", cat: "FOD", icon: "spoon", name: "Tactical Spoon (Black)",
-    short: "A strong spoon for eating straight from a meal pack or container.",
+    short: "5-in-1 multi-functional EDC stainless steel spoon.",
     why: "You may have no kitchen tools after an evacuation. A sturdy spoon makes eating cleaner and easier.",
     steps: ["Wipe or rinse the spoon before eating.", "Use it to eat directly from your food pack.", "Clean it with a wipe after use and pack it away."],
-    spec: "Black, sturdy", maintain: "Keep it clean and stored in the pouch.",
+    spec: "5-in-1, stainless steel, black", maintain: "Keep it clean and stored in the pouch.",
     q: "", video: "" },
 
-  { serial: "K72-FOD-006", cat: "FOD", icon: "spoon", name: "Folding Spoon",
-    short: "A spoon that folds small to save space.",
+  { serial: "K72-FOD-006", cat: "FOD", icon: "spoon", name: "Foldable Spoon",
+    short: "Stainless steel spork.",
     why: "Each person needs their own utensil. A folding spoon fits easily in a pouch.",
     steps: ["Unfold the spoon until it locks open.", "Use it to eat or stir.", "Clean it, fold it and pack it away."],
-    spec: "Folding", maintain: "Check that the hinge still locks. Keep it clean and dry.",
+    spec: "Foldable, stainless steel", maintain: "Check that the hinge still locks. Keep it clean and dry.",
     q: "", video: "" },
 
   { serial: "K72-MED-001", cat: "MED", icon: "aid", name: "First Aid Kit",
@@ -229,46 +229,39 @@ KIDAN.items = [
     spec: "Basic wound-care supplies", maintain: "Check the kit every 3 months. Replace anything used or expired.",
     q: "basic first aid kit how to use wound care", video: "" },
 
-  { serial: "K72-MED-002", cat: "MED", icon: "pill", name: "Ointment",
-    short: "A topical ointment for minor skin problems such as small cuts, scrapes or irritation.",
-    why: "Small skin injuries can get worse in wet, dirty conditions. A protective ointment helps keep them covered.",
-    steps: ["Clean and dry the area first.", "Apply a thin layer as directed on the label.", "Cover with a clean dressing if needed.", "Stop using it and seek help if irritation gets worse."],
-    spec: "Topical ointment", maintain: "Check the expiry date and keep the cap tightly closed.",
-    q: "", video: "" },
-
-  { serial: "K72-LGT-001", cat: "LGT", icon: "head", name: "Headlamp (Warsun)",
-    short: "A head-worn light that keeps both hands free.",
+  { serial: "K72-LGT-001", cat: "LGT", icon: "head", name: "Headlamp",
+    short: "Rechargeable headlamp with motion sensor and 5 modes. Removable battery.",
     why: "Power is often out for days. A headlamp lets you work, walk and help others in the dark with both hands free.",
     steps: ["Adjust the strap so it sits firmly on your forehead.", "Switch it on and choose the lowest brightness that works, to save battery.", "Angle it down so you don't blind the people around you.", "Charge it whenever you have power."],
-    spec: "Head-worn, adjustable strap", maintain: "Test it every month and keep it charged.",
+    spec: "Rechargeable, motion sensor, 5 modes, removable battery", maintain: "Test it every month and keep it charged.",
     q: "how to use headlamp", video: "" },
 
   { serial: "K72-LGT-002", cat: "LGT", icon: "torch", name: "Rechargeable Flashlight (USB)",
-    short: "A handheld flashlight you recharge by USB.",
+    short: "LED flashlight with 3 modes. USB rechargeable (Type-C).",
     why: "A strong handheld light helps you see further, check routes and signal for help.",
     steps: ["Charge it fully by USB before packing.", "Use the lower mode for everyday tasks and the strongest mode only when needed.", "Recharge it from a power bank when it runs low."],
-    spec: "Rechargeable, USB charging", maintain: "Test it every month and top up the charge.",
+    spec: "LED, 3 modes, USB Type-C rechargeable", maintain: "Test it every month and top up the charge.",
     q: "rechargeable flashlight usb", video: "" },
 
   { serial: "K72-LGT-003", cat: "LGT", icon: "glow", name: "Glow Stick",
-    short: "A chemical light that glows without batteries or flame.",
+    short: "6-inch glow stick.",
     why: "It is a safe light for inside tents and shelters, and a marker so others can see you or find your bag.",
     steps: ["Bend the stick until you hear it snap inside.", "Shake it to start the glow.", "Hang it where you need light or use it to mark a spot."],
-    spec: "Single-use, no batteries", maintain: "Single use only. Replace it after use or when it passes the date on the pack.",
+    spec: "6-inch, single-use, no batteries", maintain: "Single use only. Replace it after use or when it passes the date on the pack.",
     q: "", video: "" },
 
-  { serial: "K72-PWR-001", cat: "PWR", icon: "battery", name: "Rechargeable Power Bank (20,000 mAh)",
-    short: "A high-capacity battery pack to recharge your phone and USB devices.",
+  { serial: "K72-PWR-001", cat: "PWR", icon: "battery", name: "Rechargeable Power Bank (10,000 mAh)",
+    short: "A high-capacity battery pack to recharge phone and USB devices.",
     why: "Your phone is your lifeline for warnings, maps and contacting family. A charged power bank keeps it working through an outage.",
     steps: ["Charge it fully before packing it.", "Use it to top up your phone when the battery gets low, not only when it is empty.", "Recharge the power bank whenever you have electricity."],
-    spec: "20,000 mAh, rechargeable", maintain: "Recharge it every month, even if unused. Keep it dry.",
+    spec: "10,000 mAh, rechargeable, fast charge", maintain: "Recharge it every month, even if unused. Keep it dry.",
     q: "how to use power bank emergency", video: "" },
 
   { serial: "K72-PWR-002", cat: "PWR", icon: "plug", name: "Multi-Port Charging Cable",
-    short: "One cable with several tips, to charge different phones and devices.",
+    short: "One cable with several heads, to charge different phones and devices.",
     why: "Family members often use different phones. One cable that fits several types means nobody is left without power.",
     steps: ["Plug the cable into your power bank.", "Use the tip that fits your phone or device.", "Unplug and coil it neatly when you're done."],
-    spec: "Several connector types in one cable", maintain: "Check the cable and tips for damage. Keep it dry.",
+    spec: "Several connector types in one cable", maintain: "Check the cable and heads for damage. Keep it dry.",
     q: "", video: "" },
 
   { serial: "K72-PWR-003", cat: "PWR", icon: "solar", name: "Solar / USB Power Bank",
@@ -278,22 +271,15 @@ KIDAN.items = [
     spec: "Solar panel and USB charging", maintain: "Recharge it every month and keep the panel clean.",
     q: "solar power bank how to use", video: "" },
 
-  { serial: "K72-PWR-004", cat: "PWR", icon: "battery", name: "Power Bank (10,000 mAh)",
-    short: "A slim USAMS fast-charge power bank to keep your phone running.",
-    why: "Power can be out for days after a typhoon. A charged power bank keeps your phone ready for alerts, calls and your flashlight.",
-    steps: ["Charge it fully before storing it in the bag.", "Connect your phone with the charging cable when its battery runs low.", "Turn it off and unplug it once your phone is charged to save power."],
-    spec: "10,000 mAh, fast charge", maintain: "Recharge it every month, even if unused. Keep it dry and away from heat.",
-    q: "", video: "" },
-
   { serial: "K72-COM-001", cat: "COM", icon: "whistle", name: "Whistle with Compass",
-    short: "A loud signal whistle with a small built-in compass.",
+    short: "Whistle with built-in compass.",
     why: "A whistle carries further than your voice and uses less energy. The compass helps you keep a direction when landmarks are gone.",
     steps: ["Blow three short blasts to signal for help, then pause and repeat.", "Keep it on a cord where you can reach it quickly.", "Hold the compass flat to read the direction."],
     spec: "Signal whistle with built-in compass", maintain: "Test it every month. Keep it clean and dry.",
     q: "emergency whistle signal three blasts", video: "" },
 
   { serial: "K72-COM-002", cat: "COM", icon: "phone", name: "Waterproof Phone Pouch",
-    short: "A sealed pouch that keeps your phone dry while you can still use the screen.",
+    short: "A sealed pouch that keeps your phone dry.",
     why: "Rain and floodwater can kill a phone in seconds. A waterproof pouch protects your most important tool.",
     steps: ["Put your phone inside and close the seal fully.", "Test it with no phone inside first to check that it seals.", "You can usually use the touchscreen through the pouch."],
     spec: "Waterproof, sealable", maintain: "Check the seal for cracks or tears before each season.",
@@ -307,10 +293,10 @@ KIDAN.items = [
     q: "", video: "" },
 
   { serial: "K72-DOC-002", cat: "DOC", icon: "pencil", name: "Pencil",
-    short: "A pencil that writes even when paper is damp.",
+    short: "Sturdy and durable, no sharpening needed.",
     why: "Pens can leak, dry out or fail on wet paper. A pencil keeps working.",
     steps: ["Keep it with the notebook.", "Use it to write notes, messages or directions.", "Sharpen it with your multi-tool if needed."],
-    spec: "Standard pencil", maintain: "Keep it sharpened and stored with the notebook.",
+    spec: "Durable, no sharpening needed", maintain: "Keep it stored with the notebook.",
     q: "", video: "" },
 
   { serial: "K72-DOC-003", cat: "DOC", icon: "doc", name: "Waterproof Zip Bags (L)",
@@ -321,95 +307,67 @@ KIDAN.items = [
     q: "", video: "" },
 
   { serial: "K72-WTH-001", cat: "WTH", icon: "blanket", name: "Emergency Thermal Blanket",
-    short: "A light foil blanket that keeps in body heat. One is packed in each pouch.",
+    short: "A light foil blanket that keeps in body heat. 2 included in the KIDAN Black.",
     why: "After getting wet in rain or floodwater, your body loses heat fast, even in warm weather. A thermal blanket helps keep you warm.",
     steps: ["Unfold it fully.", "Wrap it around your body, shiny side in, covering your head if possible.", "Use it under a tarp or tent for extra warmth."],
     spec: "Foil emergency blanket, folds small", maintain: "Keep it sealed until needed. Replace it once it has been used.",
     q: "how to use emergency thermal blanket", video: "" },
 
   { serial: "K72-WTH-002", cat: "WTH", icon: "rain", name: "Lightweight Rain Poncho",
-    short: "A light, packable poncho that keeps you and your bag dry.",
+    short: "Compact and durable.",
     why: "Staying dry helps you stay warm and healthy during typhoon rains.",
     steps: ["Unfold it and put it on over your clothes.", "Wear it over your bag to keep the bag dry too.", "Shake it dry and fold it after use."],
     spec: "Lightweight, packable", maintain: "Check it for tears. Dry it fully before packing it again.",
     q: "", video: "" },
 
   { serial: "K72-WTH-003", cat: "WTH", icon: "trash", name: "Heavy-Duty Garbage Bags (3XL)",
-    short: "Large, tough bags for rubbish, rain covers and keeping gear dry.",
+    short: "",
     why: "Extra-large bags have many uses: a rain cover, a ground sheet, a bag liner, or sealing away rubbish and waste.",
     steps: ["Line your pouch or bag with one to keep the contents dry.", "Cut a head hole to make an emergency rain cover.", "Use one to collect and seal away rubbish."],
     spec: "Heavy-duty, 3XL", maintain: "Keep them folded flat. Replace any that are used or torn.",
     q: "", video: "" },
 
   { serial: "K72-WTH-004", cat: "WTH", icon: "tent", name: "2-Person Tent",
-    short: "A compact tent that sleeps two people.",
+    short: "2-person outdoor, waterproof emergency camping tent.",
     why: "Evacuation centres can be crowded. A tent gives your family dry, private space to rest.",
     steps: ["Choose high, flat ground away from rivers and slopes.", "Lay out the tent, then put in the poles and raise it.", "Stake down all corners and tie the guy lines firmly in wind."],
-    spec: "2-person", maintain: "Practise setting it up at home. Dry it fully before packing it away.",
+    spec: "2-person, waterproof", maintain: "Practise setting it up at home. Dry it fully before packing it away.",
     q: "how to set up 2 person tent", video: "" },
 
   { serial: "K72-WTH-005", cat: "WTH", icon: "sleep", name: "Sleeping Bag",
-    short: "A packable sleeping bag for rest in shelters or outdoors.",
+    short: "Compact and waterproof.",
     why: "Rest keeps you able to make good decisions. A sleeping bag keeps you warm and off the cold floor.",
     steps: ["Unpack it and let it fluff up before use.", "Lay it on a dry surface, or on a garbage bag as a ground sheet.", "Roll it tightly and pack it in its sack after use."],
-    spec: "Packable", maintain: "Air it out and keep it dry. Store it loosely when not in the bag for long periods.",
+    spec: "Compact, waterproof", maintain: "Air it out and keep it dry. Store it loosely when not in the bag for long periods.",
     q: "", video: "" },
 
   { serial: "K72-HYG-001", cat: "HYG", icon: "towel", name: "Compressed Towel (70 × 140 cm)",
-    short: "A large disposable towel compressed into a small tablet.",
+    short: "",
     why: "Drying off after rain or a wash helps prevent chills and skin problems.",
     steps: ["Add a little water to the compressed tablet.", "Unroll it to its full size.", "Use it to dry off or clean up, then dispose of it."],
     spec: "Disposable, 70 × 140 cm when open", maintain: "Keep it sealed and dry until needed.",
     q: "", video: "" },
 
-  { serial: "K72-HYG-002", cat: "HYG", icon: "hygiene", name: "Urine Bags",
-    short: "Sealed bags for going to the toilet when no toilet is available.",
-    why: "Toilets may be flooded, broken or unavailable during evacuation. Urine bags keep things clean and private.",
+  { serial: "K72-HYG-002", cat: "HYG", icon: "hygiene", name: "Portable Car Urine Bags",
+    short: "Disposable pee and vomit bags.",
+    why: "Toilets may be flooded, broken or unavailable during evacuation. These bags keep things clean and private, and also help with motion sickness while travelling.",
     steps: ["Open the bag and use it following the instructions on the pack.", "Seal it tightly after use.", "Dispose of it properly in a rubbish bag."],
     spec: "Single-use, sealable", maintain: "Keep enough for 72 hours. Replace any you use.",
     q: "", video: "" },
 
-  { serial: "K72-HYG-003", cat: "HYG", icon: "hygiene", name: "Floss (Robinson's)",
-    short: "Dental floss for cleaning your teeth. It also works as strong thread.",
+  { serial: "K72-HYG-003", cat: "HYG", icon: "hygiene", name: "Floss",
+    short: "Dental floss.",
     why: "Keeping your mouth clean helps you stay healthy. Floss can also be used to tie or mend things.",
     steps: ["Use it after eating to clean between your teeth.", "Use a length as strong thread for small repairs if needed."],
     spec: "Dental floss", maintain: "Replace it when it runs low.",
     q: "", video: "" },
 
   { serial: "K72-HYG-004", cat: "HYG", icon: "hygiene", name: "Wipes",
-    short: "Wet wipes for cleaning hands, face and body when water is short.",
+    short: "",
     why: "Clean hands prevent illness, especially when water is limited.",
     steps: ["Wipe your hands before eating and after using the toilet.", "Use them to freshen up when you can't bathe.", "Seal the pack after each use so they don't dry out."],
     spec: "Wet wipes", maintain: "Check the pack is still sealed and moist. Replace it when opened for long.",
     q: "", video: "" },
-
-  { serial: "K72-HYG-005", cat: "HYG", icon: "hygiene", name: "Toothbrush Set",
-    short: "A toothbrush and toothpaste kit.",
-    why: "Daily routines like brushing help you stay healthy and feel normal during a stressful time.",
-    steps: ["Brush twice a day using as little water as possible.", "Rinse and dry the toothbrush before packing it.", "Keep it in its case."],
-    spec: "Toothbrush and toothpaste", maintain: "Replace the toothbrush every 3 months and the toothpaste before it expires.",
-    q: "", video: "" },
-
-  { serial: "K72-HYG-006", cat: "HYG", icon: "razor", name: "Disposable Razor",
-    short: "A light disposable razor for shaving during an evacuation.",
-    why: "Staying clean and groomed helps you feel normal and healthy in a shelter. It can also trim small things in a pinch.",
-    steps: ["Wet the skin first, with soap if you have it.", "Shave slowly in the direction the hair grows.", "Rinse it, put the cap back on and pack it."],
-    spec: "Disposable, with cap", maintain: "Keep the cap on and replace it once the blade is dull.",
-    q: "", video: "" },
-
-  { serial: "K72-HYG-007", cat: "HYG", icon: "clipper", name: "Nail Clipper",
-    short: "A steel nail clipper on a ball chain so it doesn't get lost.",
-    why: "Short, clean nails prevent cuts, dirt and infection when water is limited. It can also snip thread and small cords.",
-    steps: ["Trim nails straight across.", "Wipe the clipper clean after use.", "Clip it to a zipper or inside a pouch with the chain."],
-    spec: "Stainless steel, with ball chain", maintain: "Wipe it dry to prevent rust.",
-    q: "", video: "" },
-
-  { serial: "K72-TLS-001", cat: "TLS", icon: "tool", name: "Compact Multi-Tool",
-    short: "Pliers, blades and other tools in one compact tool.",
-    why: "After a storm you may need to cut, grip, open or fix things. A multi-tool covers most small jobs.",
-    steps: ["Open only the tool you need and lock it before using.", "Cut away from your body.", "Close every tool before putting it away."],
-    spec: "Compact, several tools in one", maintain: "Wipe it dry after use and add a drop of oil to the hinges now and then.",
-    q: "multi tool how to use safely", video: "" },
 
   { serial: "K72-TLS-002", cat: "TLS", icon: "scissors", name: "Folding Scissors (Stainless)",
     short: "Stainless steel scissors that fold for safe packing.",
@@ -419,14 +377,14 @@ KIDAN.items = [
     q: "", video: "" },
 
   { serial: "K72-TLS-003", cat: "TLS", icon: "rope", name: "Paracord",
-    short: "Strong cord for tying, hanging, lashing and repairs.",
+    short: "31 meters, 7-core, 4 mm diameter rope.",
     why: "Cord lets you put up a shelter, hang a tarp, secure gear or make a clothesline.",
     steps: ["Measure the length you need before cutting.", "Tie it off with a secure knot.", "If you know how, seal cut ends with a little heat so they don't fray."],
-    spec: "Paracord", maintain: "Coil it neatly so it doesn't tangle. Replace damaged lengths.",
+    spec: "31 m, 7-core, 4 mm diameter", maintain: "Coil it neatly so it doesn't tangle. Replace damaged lengths.",
     q: "paracord knots basics", video: "" },
 
   { serial: "K72-TLS-004", cat: "TLS", icon: "ziptie", name: "Zip Ties",
-    short: "Plastic ties in two lengths for quick fastening and repairs.",
+    short: "",
     why: "Zip ties fix, bundle and secure things in seconds, from tent poles to broken straps.",
     steps: ["Choose the short or long tie for the job.", "Loop it around and pull it tight through the lock.", "Trim the extra tail with scissors."],
     spec: "100 mm and 200 mm", maintain: "Replace any you use.",
@@ -434,12 +392,12 @@ KIDAN.items = [
     q: "", video: "" },
 
   { serial: "K72-SRV-001", cat: "SRV", icon: "fish", name: "Fishing Kit",
-    short: "A small fishing set to catch food from rivers or the sea.",
+    short: "For fresh and salt water fishing.",
     why: "If food runs short over several days, fishing gives you another source of food. Only fish in safe, clean water, never in floodwater.",
     steps: ["Wind the nylon thread around the wood dowel or tin can as your line.", "Tie on a swivel, then a hook. Use the deep or shallow hook to match the water.", "Add a sinker above the hook so it sinks.", "Follow the instruction sticker in the kit."],
     spec: "Hooks, sinkers, swivel, nylon thread, tin can, wood dowel, instruction sticker", maintain: "Check the hooks for rust and keep the kit dry.",
     parts: ["Hook (deep water)", "Hook (shallow water)", "Sinker (10 g)", "Sinker (5 g)", "Swivel", "Nylon thread", "Tin can (silver)", "Wood dowel", "Sticker for instructions (8 × 5 cm)"],
-    q: "survival fishing kit how to use", photos: 2, video: "" },
+    q: "survival fishing kit how to use", video: "" },
 
   { serial: "K72-SRV-002", cat: "SRV", icon: "trap", name: "Trap Kit",
     short: "Dowels, thread and instructions for setting a simple snare.",
@@ -450,15 +408,15 @@ KIDAN.items = [
     q: "", photos: 2, video: "" },
 
   { serial: "K72-SRV-003", cat: "SRV", icon: "fire", name: "Fire Starter Kit",
-    short: "A ferro rod with cotton balls and petroleum jelly to start a fire, even when it's damp.",
-    why: "Fire gives warmth, boils water and helps you signal. Cotton balls with petroleum jelly catch a spark and burn long enough to light kindling.",
-    steps: ["Prepare dry kindling and small sticks in a safe, open spot.", "Rub a cotton ball with petroleum jelly and fluff it out.", "Scrape the ferro rod firmly to throw sparks onto the cotton ball.", "Feed the flame slowly with small sticks. Never leave a fire unattended."],
-    spec: "Ferro rod, cotton balls, petroleum jelly, tin can, instruction sticker", maintain: "Keep the cotton balls dry in the sealed tin. Practise using it at home.",
-    parts: ["Ferro rod", "Cotton balls", "Petroleum jelly", "Tin can (black)", "Sticker (50 × 30)"],
-    q: "how to use ferro rod cotton ball petroleum jelly", video: "" },
+    short: "A ferro rod and cotton balls.",
+    why: "Fire gives warmth, boils water and helps you signal. Cotton balls catch a spark and burn long enough to light kindling.",
+    steps: ["Prepare dry kindling and small sticks in a safe, open spot.", "Pull a cotton ball apart and fluff it out.", "Scrape the ferro rod firmly to throw sparks onto the cotton ball.", "Feed the flame slowly with small sticks. Never leave a fire unattended."],
+    spec: "Ferro rod, cotton balls, tin can, instruction sticker", maintain: "Keep the cotton balls dry in the sealed tin. Practise using it at home.",
+    parts: ["Ferro rod", "Cotton balls", "Tin can (black)", "Sticker (50 × 30)"],
+    q: "how to use ferro rod cotton ball", video: "" },
 
   { serial: "K72-SRV-004", cat: "SRV", icon: "slingshot", name: "Slingshot",
-    short: "A wooden slingshot with a strong rubber band.",
+    short: "\"Tirador\"",
     why: "It can be used to signal by launching small objects, to scare off animals, or to hunt small game when stranded for several days.",
     steps: ["Hold the handle firmly with your arm straight.", "Place a small stone in the pouch and pull back to your cheek.", "Aim away from people, windows and animals you don't intend to hit, then release."],
     spec: "Wooden frame, rubber band", maintain: "Keep the band out of the sun and replace it if it cracks.",
@@ -477,10 +435,10 @@ KIDAN.modules = [
     items: ["K72-FOD-001", "K72-FOD-002", "K72-FOD-003", "K72-SRV-001", "K72-SRV-002"], q: "no cook emergency food", video: "" },
   { code: "D", icon: "aid", name: "First Aid", short: "Kit contents, basic demonstrations, critical medication.",
     lessons: ["Kit contents and layout", "Wound cleaning and dressing", "Bleeding control", "Sprains and immobilisation", "Critical medication management"],
-    items: ["K72-MED-001", "K72-MED-002"], q: "basic first aid training bleeding control", video: "" },
+    items: ["K72-MED-001"], q: "basic first aid training bleeding control", video: "" },
   { code: "E", icon: "battery", name: "Power & Light", short: "Lights, battery care, power bank and phone power.",
     lessons: ["Flashlight and headlamp use", "Battery care and storage", "Power bank optimisation", "Phone power management"],
-    items: ["K72-LGT-001", "K72-LGT-002", "K72-LGT-003", "K72-PWR-001", "K72-PWR-002", "K72-PWR-003", "K72-PWR-004"], q: "save phone battery power outage", video: "" },
+    items: ["K72-LGT-001", "K72-LGT-002", "K72-LGT-003", "K72-PWR-001", "K72-PWR-002", "K72-PWR-003"], q: "save phone battery power outage", video: "" },
   { code: "F", icon: "radio", name: "Communication", short: "Emergency channels, phone prep, radio and family protocol.",
     lessons: ["Official emergency channels", "Phone preparation", "Radio operation", "Family communication during outages"],
     items: ["K72-COM-001", "K72-COM-002", "K72-DOC-001", "K72-DOC-002"], q: "family emergency communication plan", video: "" },
@@ -495,7 +453,7 @@ KIDAN.modules = [
     items: ["K72-COM-001"], q: "map and compass navigation basics", video: "" },
   { code: "J", icon: "rope", name: "Cordage & Basic Tools", short: "Essential knots, cordage uses and emergency tools.",
     lessons: ["Bowline, clove hitch, taut-line hitch", "Lashing and securing gear", "Multi-tool use and safety", "Improvised repairs"],
-    items: ["K72-TLS-003", "K72-TLS-001", "K72-TLS-002", "K72-TLS-004"], q: "essential knots survival", video: "" }
+    items: ["K72-TLS-003", "K72-TLS-002", "K72-TLS-004"], q: "essential knots survival", video: "" }
 ];
 
 KIDAN.readiness = [

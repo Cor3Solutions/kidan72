@@ -1,6 +1,9 @@
 /* KIDAN 72 — Go-Bag shop page */
 Store.ready.then(() => {
 
+  // Photo slideshow at the top
+  kitSlider(document.getElementById("kit-slider"), KIDAN.kitSlides || []);
+
   // The three bags
   const bags = document.getElementById("bags");
   bags.innerHTML = KIDAN.bags.map(bagCard).join("");
@@ -11,7 +14,7 @@ Store.ready.then(() => {
   const catalogEl = document.getElementById("catalog");
   const countEl = document.getElementById("count");
   const usedCats = [...new Set(KIDAN.items.map(i => i.cat))];
-  // Pouch buttons: show only the items packed in the Black KIDAN or the Coyote KIDAN
+  // Pouch buttons: show only the items packed in the KIDAN Black or the KIDAN Brown
   const pouches = KIDAN.bags.filter(b => b.contents && b.contents.length);
   const pouchOf = key => pouches.find(b => b.serial === key);
   let active = new URLSearchParams(location.search).get("cat") || "ALL";
@@ -59,3 +62,43 @@ Store.ready.then(() => {
   render();
   if (new URLSearchParams(location.search).get("cat")) document.getElementById("items").scrollIntoView();
 });
+
+/* Photo slideshow: swipe, tap the dots, or let it advance every 5 seconds.
+   Slides whose photo is missing are left out. */
+function kitSlider(box, slides) {
+  if (!box) return;
+  box.innerHTML = `<div class="kit-slides">${slides.map((sl, i) => `
+    <figure class="kit-slide" data-fallback="${esc(sl.fallback || "")}">
+      <img src="${esc(sl.src)}" alt="${esc(sl.caption || "")}" decoding="async">
+      ${sl.caption ? `<figcaption>${esc(sl.caption)}</figcaption>` : ""}
+    </figure>`).join("")}</div>`;
+  const row = box.querySelector(".kit-slides");
+  let timer = null, settled = 0;
+  const done = () => {
+    if (++settled < slides.length) return;
+    if (!row.children.length) { box.remove(); return; }
+    swipeDots(row);
+    const dots = row.nextElementSibling;
+    if (dots && dots.classList.contains("swipe-dots")) box.after(dots);
+    if (row.children.length < 2) return;
+    const next = () => {
+      const max = row.scrollWidth - row.clientWidth;
+      row.scrollTo({ left: row.scrollLeft >= max - 4 ? 0 : row.scrollLeft + row.clientWidth, behavior: "smooth" });
+    };
+    const start = () => { stop(); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) timer = setInterval(next, 5000); };
+    const stop = () => { clearInterval(timer); timer = null; };
+    ["pointerdown", "mouseenter", "focusin"].forEach(ev => box.addEventListener(ev, stop));
+    box.addEventListener("mouseleave", start);
+    start();
+  };
+  row.querySelectorAll(".kit-slide").forEach(fig => {
+    const img = fig.querySelector("img");
+    if (img.complete && img.naturalWidth) { done(); return; }
+    img.addEventListener("load", done, { once: true });
+    img.addEventListener("error", () => {
+      const fb = fig.dataset.fallback;
+      if (fb && img.getAttribute("src") !== fb) { img.src = fb; return; }
+      fig.remove(); done();
+    });
+  });
+}

@@ -219,9 +219,12 @@ function detailUrl(serial) { return "item.html?sn=" + encodeURIComponent(serial)
 /* Photo slot. Shows assets/img/products/<serial>.jpg when present,
    otherwise a specimen plate with the item's icon. */
 function photoSlot(serial, iconName, extraClass = "") {
-  return `<div class="photo ${extraClass}">
+  // photo: false in js/data.js hides an item's photo (e.g. while a new one is being taken)
+  const it = findItem(serial);
+  const hidden = it && it.photo === false;
+  return `<div class="photo ${extraClass}${hidden ? " no-photo" : ""}">
     <span class="sn-badge">${esc(serial)}</span>
-    <img src="assets/img/products/${encodeURIComponent(serial)}.jpg" alt="" loading="lazy" onerror="this.closest('.photo').classList.add('no-photo')">
+    ${hidden ? "" : `<img src="assets/img/products/${encodeURIComponent(serial)}.jpg" alt="" loading="lazy" onerror="this.closest('.photo').classList.add('no-photo')">`}
     <span class="ticks"></span>
     <span class="placeholder">${icon(iconName)}<small>Photo coming soon</small></span>
   </div>`;
@@ -239,7 +242,7 @@ function itemCard(item) {
     <div class="item-body">
       <span class="tag">${esc(KIDAN.categories[item.cat])}</span>
       <h3><a href="${detailUrl(item.serial)}">${esc(item.name)}</a></h3>
-      <p>${esc(item.short)}</p>
+      ${item.short ? `<p>${esc(item.short)}</p>` : ""}
       <div class="item-foot">
         <span class="serial">${esc(item.serial)}</span>
         <span class="price">${isSold(item.serial) ? peso(price(item.serial)) : "Bag only"}</span>
@@ -372,9 +375,9 @@ function buildFooter() {
           <p>A practical readiness system built for the first 72 hours after a major disruption.</p>
         </div>
         <div><h4>Shop</h4><ul>
-          <li><a href="item.html?sn=K72-BAG-000">Preparedness Go-Bag</a></li>
-          <li><a href="item.html?sn=K72-BAG-001">Black KIDAN</a></li>
-          <li><a href="item.html?sn=K72-BAG-002">Coyote KIDAN</a></li>
+          <li><a href="item.html?sn=K72-BAG-000">Preparedness Bag</a></li>
+          <li><a href="item.html?sn=K72-BAG-001">KIDAN Black</a></li>
+          <li><a href="item.html?sn=K72-BAG-002">KIDAN Brown</a></li>
           <li><a href="gobag.html#items">Individual items</a></li>
           <li><a href="order.html">My Order</a></li>
         </ul></div>
