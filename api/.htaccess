@@ -1,0 +1,4 @@
+# Only catalog.php and orders.php may be opened from the web.
+<FilesMatch "^(config|config\.sample|lib|migrations|shop)\.php$">
+  Require all denied
+</FilesMatch>

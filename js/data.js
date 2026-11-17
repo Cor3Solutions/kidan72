@@ -6,9 +6,9 @@
    serial number, e.g.  K72-WTR-001.jpg
    Extra photos of the same item: K72-SRV-001-2.jpg, K72-SRV-001-3.jpg ...
    and add  photos: 2  (or 3 ...) to that item below.
-   Bag photos: K72-BAG-000.jpg (KIDAN 72 Preparedness Bag),
-               K72-BAG-001.jpg (KIDAN Black),
-               K72-BAG-002.jpg (KIDAN Brown)
+   Bag photo: K72-BAG-000.jpg (black), -2.jpg (brown), -3.jpg (green)
+   KIDAN Backpack: K72-PCH-002.jpg (black), -2.jpg (brown), -3.jpg (green)
+   KIDAN Pouch: K72-PCH-001.jpg (black), -2.jpg (brown), -3.jpg (green), -4.jpg (inside)
    Photos appear on the site automatically once the file exists.
 
    VIDEOS: paste your YouTube link into "video" for any item or
@@ -23,26 +23,22 @@ const KIDAN = {};
 /* ---------------------------------------------------------
    1) PRICES — type the price in pesos, numbers only.
       Example:  "K72-BAG-000": 4500,
-      Leave as null to show "PHP xx" on the site.
+      Leave as null to show "Price to follow" on the site.
    --------------------------------------------------------- */
 KIDAN.prices = {
   // Bags
   "K72-BAG-000": null,   // KIDAN 72 Preparedness Bag
-  "K72-BAG-001": null,   // KIDAN Black
-  "K72-BAG-002": null,   // KIDAN Brown
   // Individual items
+  "K72-PCH-001": null,   // KIDAN Pouch (black, brown or green)
   "K72-WTR-001": null,   // Water Purifying Kit
-  "K72-WTR-002": null,   // Collapsible Silicone Cup
   "K72-WTR-003": null,   // Collapsible Metal Cup
-  "K72-FOD-001": null,   // Shelf-Stable Food (MRE)
+  "K72-FOD-001": null,   // Food Pack
   "K72-FOD-002": null,   // Honey
   "K72-FOD-003": null,   // Salt
   "K72-FOD-005": null,   // Tactical Spoon (Black)
-  "K72-FOD-006": null,   // Folding Spoon
   "K72-MED-001": null,   // First Aid Kit
   "K72-LGT-001": null,   // Headlamp (Warsun)
   "K72-LGT-002": null,   // Rechargeable Flashlight (USB)
-  "K72-LGT-003": null,   // Glow Stick
   "K72-PWR-001": null,   // Rechargeable Power Bank (20,000 mAh)
   "K72-PWR-002": null,   // Multi-Port Charging Cable
   "K72-PWR-003": null,   // Solar / USB Power Bank
@@ -59,7 +55,7 @@ KIDAN.prices = {
   "K72-HYG-001": null,   // Compressed Towel (70 × 140 cm)
   "K72-HYG-002": null,   // Urine Bags
   "K72-HYG-003": null,   // Floss (Robinson's)
-  "K72-HYG-004": null,   // Wipes
+  "K72-HYG-004": null,   // Wipes (1 pc)
   "K72-TLS-002": null,   // Folding Scissors (Stainless)
   "K72-TLS-003": null,   // Paracord
   "K72-TLS-004": null,   // Zip Ties
@@ -97,12 +93,13 @@ KIDAN.brandFilm = "https://youtu.be/_H-cqF8l8lw";
    --------------------------------------------------------- */
 KIDAN.kitSlides = [
   { src: "assets/img/kit/1-all-items.jpg",   fallback: "assets/img/photo-kit.jpg", caption: "All items" },
-  { src: "assets/img/kit/2-kidan-black.jpg", caption: "KIDAN Black · all items" },
-  { src: "assets/img/kit/3-kidan-brown.jpg", caption: "KIDAN Brown · all items" },
-  { src: "assets/img/kit/4-backpack.jpg",    caption: "Preparedness Bag · with both pouches" }
+  { src: "assets/img/kit/2-kidan-black.jpg", caption: "KIDAN Pouch · Black" },
+  { src: "assets/img/kit/3-kidan-brown.jpg", caption: "KIDAN Pouch · Brown" },
+  { src: "assets/img/kit/4-backpack.jpg",    caption: "Preparedness Bag · with the KIDAN Pouch" }
 ];
 
 KIDAN.categories = {
+  PCH: "Backpack & Pouch",
   WTR: "Water & Hydration",
   FOD: "Food & Nourishment",
   MED: "Medical",
@@ -117,54 +114,51 @@ KIDAN.categories = {
 };
 
 /* ---------------------------------------------------------
-   3) BAGS — the three bag options.
-      "contents" lists which items are packed in each pouch.
-      DRAFT: pouch contents are based on the product photos;
-      move serial numbers between the two lists if needed.
+   3) BAGS — the Preparedness Bag.
+      "contents" lists every item packed in it (filled in below from
+      KIDAN.items). "choice" lets the customer pick the colour of the
+      backpack and pouch; "photos" says which photo shows each colour.
    --------------------------------------------------------- */
 KIDAN.bags = [
   {
     serial: "K72-BAG-000", icon: "bag", name: "KIDAN 72 Preparedness Bag", label: "Complete system",
-    short: "The full 72-hour system: the primary bag with the KIDAN Black and the KIDAN Brown packed inside.",
-    summary: "Everything one person needs for the first 72 hours after a typhoon, flood or evacuation. The primary bag holds the KIDAN Black and the KIDAN Brown, so you can grab the whole system at once or split it between family members.",
-    includes: ["K72-BAG-001", "K72-BAG-002"],
+    photos: 3,
+    short: "The full 72-hour system: one big backpack with every item and a KIDAN Pouch inside. Black, brown or green.",
+    summary: "Everything one person needs for the first 72 hours after a typhoon, flood or evacuation, packed in one big backpack with a KIDAN Pouch inside to keep the small items sorted. Choose black, brown or green; the pouch comes in the same colour.",
+    contents: [],
+    choice: { label: "Colour", values: ["Black", "Brown", "Green"], photos: [1, 2, 3] },
     specs: [
-      ["Configuration", "Primary bag + KIDAN Black + KIDAN Brown"],
+      ["Configuration", "1 big backpack + 1 KIDAN Pouch inside, same colour"],
+      ["Colours", "Black · Brown · Green"],
       ["Coverage", "1 person · 72 hours"],
-      ["Contents", "Everything in the KIDAN Black and the KIDAN Brown"],
+      ["Contents", "Every item in the KIDAN 72 system"],
       ["Registration", "Logged in the KIDAN 72 Database with owner profile, inventory and expiry dates"],
       ["Inspection", "Monthly function check · Quarterly full inspection"]
-    ]
-  },
-  {
-    serial: "K72-BAG-001", icon: "aid", name: "KIDAN Black", label: "Sustainment module", photos: 2,
-    short: "Medical kit, food, electronic needs and documents.",
-    summary: "Medical kit, food, electronic needs and documents: everything that keeps you fed, treated and connected, plus the papers you need after an evacuation.",
-    contents: ["K72-MED-001", "K72-WTR-002", "K72-LGT-001", "K72-WTH-001", "K72-WTH-002", "K72-HYG-001", "K72-PWR-002", "K72-COM-002", "K72-DOC-001", "K72-DOC-002", "K72-FOD-001", "K72-FOD-002", "K72-FOD-005", "K72-PWR-001", "K72-HYG-002", "K72-HYG-003", "K72-HYG-004", "K72-LGT-003"],
-    specs: [
-      ["Role", "Medical kit, food, electronic needs and documents"],
-      ["Colour", "Black"],
-      ["Carry", "Inside the Preparedness Bag, or on its own"]
-    ]
-  },
-  {
-    serial: "K72-BAG-002", icon: "tool", name: "KIDAN Brown", label: "Field module",
-    short: "Tools and gear.",
-    summary: "Tools and gear: everything for darkness, rain, shelter and moving safely.",
-    contents: ["K72-LGT-002", "K72-COM-001", "K72-WTH-003", "K72-DOC-003", "K72-PWR-003", "K72-SRV-001", "K72-SRV-002", "K72-SRV-003", "K72-TLS-002", "K72-FOD-002", "K72-FOD-003", "K72-FOD-006", "K72-TLS-003", "K72-TLS-004", "K72-WTH-004", "K72-WTH-005", "K72-WTR-001", "K72-WTR-003", "K72-SRV-004"],
-    specs: [
-      ["Role", "Tools and gear"],
-      ["Colour", "Brown"],
-      ["Carry", "Inside the Preparedness Bag, or on its own"]
     ]
   }
 ];
 
 /* Items included with a bag but not sold on their own */
-KIDAN.notSoldSeparately = [];
+KIDAN.notSoldSeparately = ["K72-PCH-002"];
 
 /* Each item: serial is K72-<CAT>-<NNN>. "parts" lists what is inside a kit. */
 KIDAN.items = [
+  { serial: "K72-PCH-001", cat: "PCH", icon: "bag", name: "KIDAN Pouch", photos: 4,
+    short: "Organizer pouch for your kit. Choose black, brown or green.",
+    why: "A pouch keeps small items sorted, dry and easy to find in the dark, and you can grab it on its own when you need to move fast.",
+    steps: ["Pack the items you use most at the top so you can reach them quickly.", "Close every zip and buckle before you carry it.", "Clip it to your bag or carry it on its own."],
+    spec: "Organizer pouch · Black, brown or green", maintain: "Empty and air it out every 3 months. Check the zips and straps.",
+    choice: { label: "Colour", values: ["Black", "Brown", "Green"], photos: [1, 2, 3] },
+    q: "tactical organizer pouch", video: "" },
+
+  { serial: "K72-PCH-002", cat: "PCH", icon: "bag", name: "KIDAN Backpack", photos: 3,
+    short: "One big backpack that carries the whole 72-hour kit. Black, brown or green.",
+    why: "One bag you can grab and carry with both hands free. Everything you need for the first 72 hours is packed inside, with the KIDAN Pouch for the small items.",
+    steps: ["Keep it packed and ready near the door.", "Put the heavy items close to your back and the things you need first at the top.", "Tighten the shoulder and chest straps so it sits close to your body."],
+    spec: "Large tactical backpack · Black, brown or green", maintain: "Empty and air it out every 3 months. Check the zips, buckles and straps.",
+    choice: { label: "Colour", values: ["Black", "Brown", "Green"], photos: [1, 2, 3] },
+    q: "tactical backpack go bag", video: "" },
+
   { serial: "K72-WTR-001", cat: "WTR", icon: "filter", name: "Water Purifying Kit",
     short: "Chlorine tablets in an amber bottle, kept dry with silica gel, to make collected water safer to drink.",
     why: "Tap water and refilling stations can stop for days after a typhoon. Treating rainwater or well water lets you stretch your supply. Never drink floodwater, even after treatment.",
@@ -173,13 +167,6 @@ KIDAN.items = [
     parts: ["Amber bottle", "Silica gel", "Chlorine tablets"],
     q: "how to use chlorine tablets purify water emergency", video: "" },
 
-  { serial: "K72-WTR-002", cat: "WTR", icon: "cup", name: "Collapsible Silicone Cup",
-    short: "A cup that folds flat, for hot and cold drinks and food.",
-    why: "Space in a go-bag is limited. A folding cup gives you a clean drinking vessel without taking room.",
-    steps: ["Pull the cup open from the base until it locks into shape.", "Rinse it with clean water before first use.", "After use, wipe it dry and press it flat to pack it."],
-    spec: "Food-grade silicone, folds flat", maintain: "Keep it clean and dry before packing to prevent mould.",
-    q: "collapsible silicone cup camping", video: "" },
-
   { serial: "K72-WTR-003", cat: "WTR", icon: "cup", name: "Collapsible Metal Cup",
     short: "For drinking and boiling water.",
     why: "Warm water and drinks help you stay comfortable at night and after getting wet. A metal cup can be used with your fire starter kit.",
@@ -187,12 +174,12 @@ KIDAN.items = [
     spec: "Metal, collapsible", maintain: "Dry it fully after use to prevent rust or stains.",
     q: "collapsible metal cup camping", video: "" },
 
-  { serial: "K72-FOD-001", cat: "FOD", icon: "food", name: "Shelf-Stable Food (MRE)",
-    short: "High-energy bar, shelf stable for 24 years.",
+  { serial: "K72-FOD-001", cat: "FOD", icon: "food", name: "Food Pack",
+    short: "Ready-to-eat food for the first days, no cooking needed.",
     why: "Electricity and LPG may be cut for days. Ready-to-eat food keeps your energy up without cooking.",
     steps: ["Check the expiry date when you pack it.", "Open the pack and follow the eating or heating instructions printed on it.", "Eat in a dry, clean spot and pack the wrapper away as rubbish."],
-    spec: "High-energy bar, 24-year shelf life", maintain: "Log the expiry date and replace it at least one month before it expires.",
-    q: "MRE meal ready to eat how to use", video: "" },
+    spec: "Ready-to-eat food pack", maintain: "Log the expiry date and replace it at least one month before it expires.",
+    q: "emergency food pack ready to eat", video: "" },
 
   { serial: "K72-FOD-002", cat: "FOD", icon: "honey", name: "Honey",
     short: "Raw honey for quick energy.",
@@ -215,13 +202,6 @@ KIDAN.items = [
     spec: "5-in-1, stainless steel, black", maintain: "Keep it clean and stored in the pouch.",
     q: "", video: "" },
 
-  { serial: "K72-FOD-006", cat: "FOD", icon: "spoon", name: "Foldable Spoon",
-    short: "Stainless steel spork.",
-    why: "Each person needs their own utensil. A folding spoon fits easily in a pouch.",
-    steps: ["Unfold the spoon until it locks open.", "Use it to eat or stir.", "Clean it, fold it and pack it away."],
-    spec: "Foldable, stainless steel", maintain: "Check that the hinge still locks. Keep it clean and dry.",
-    q: "", video: "" },
-
   { serial: "K72-MED-001", cat: "MED", icon: "aid", name: "First Aid Kit",
     short: "Basic supplies for cleaning, covering and protecting cuts, scrapes and small injuries.",
     why: "Clinics may be crowded or hard to reach after a disaster. Cuts from debris, especially near floodwater, need quick cleaning and cover.",
@@ -242,13 +222,6 @@ KIDAN.items = [
     steps: ["Charge it fully by USB before packing.", "Use the lower mode for everyday tasks and the strongest mode only when needed.", "Recharge it from a power bank when it runs low."],
     spec: "LED, 3 modes, USB Type-C rechargeable", maintain: "Test it every month and top up the charge.",
     q: "rechargeable flashlight usb", video: "" },
-
-  { serial: "K72-LGT-003", cat: "LGT", icon: "glow", name: "Glow Stick",
-    short: "6-inch glow stick.",
-    why: "It is a safe light for inside tents and shelters, and a marker so others can see you or find your bag.",
-    steps: ["Bend the stick until you hear it snap inside.", "Shake it to start the glow.", "Hang it where you need light or use it to mark a spot."],
-    spec: "6-inch, single-use, no batteries", maintain: "Single use only. Replace it after use or when it passes the date on the pack.",
-    q: "", video: "" },
 
   { serial: "K72-PWR-001", cat: "PWR", icon: "battery", name: "Rechargeable Power Bank (10,000 mAh)",
     short: "A high-capacity battery pack to recharge phone and USB devices.",
@@ -307,7 +280,7 @@ KIDAN.items = [
     q: "", video: "" },
 
   { serial: "K72-WTH-001", cat: "WTH", icon: "blanket", name: "Emergency Thermal Blanket",
-    short: "A light foil blanket that keeps in body heat. 2 included in the KIDAN Black.",
+    short: "A light foil blanket that keeps in body heat. 2 included in the Preparedness Bag.",
     why: "After getting wet in rain or floodwater, your body loses heat fast, even in warm weather. A thermal blanket helps keep you warm.",
     steps: ["Unfold it fully.", "Wrap it around your body, shiny side in, covering your head if possible.", "Use it under a tarp or tent for extra warmth."],
     spec: "Foil emergency blanket, folds small", maintain: "Keep it sealed until needed. Replace it once it has been used.",
@@ -362,11 +335,11 @@ KIDAN.items = [
     spec: "Dental floss", maintain: "Replace it when it runs low.",
     q: "", video: "" },
 
-  { serial: "K72-HYG-004", cat: "HYG", icon: "hygiene", name: "Wipes",
-    short: "",
+  { serial: "K72-HYG-004", cat: "HYG", icon: "hygiene", name: "Wipes (1 pc)",
+    short: "Mini wet wipes. Comes as 1 pc (one pack); the photo shows more than one.",
     why: "Clean hands prevent illness, especially when water is limited.",
     steps: ["Wipe your hands before eating and after using the toilet.", "Use them to freshen up when you can't bathe.", "Seal the pack after each use so they don't dry out."],
-    spec: "Wet wipes", maintain: "Check the pack is still sealed and moist. Replace it when opened for long.",
+    spec: "Mini wet wipes · 1 pc (one pack)", maintain: "Check the pack is still sealed and moist. Replace it when opened for long.",
     q: "", video: "" },
 
   { serial: "K72-TLS-002", cat: "TLS", icon: "scissors", name: "Folding Scissors (Stainless)",
@@ -426,10 +399,10 @@ KIDAN.items = [
 KIDAN.modules = [
   { code: "A", icon: "bag", name: "Bag Preparation", short: "Why 72 hours, local hazards, packing and carrying.",
     lessons: ["Why 72 hours?", "Knowing local hazards", "Selecting the right bag", "Packing and compartment organisation", "Weight distribution and ergonomics", "Inspection routines and carrying technique"],
-    items: ["K72-BAG-000", "K72-BAG-001", "K72-BAG-002"], q: "how to pack a 72 hour go bag", video: "https://youtu.be/6_uHsU6K71Y" },
+    items: ["K72-BAG-000", "K72-PCH-001"], q: "how to pack a 72 hour go bag", video: "https://youtu.be/6_uHsU6K71Y" },
   { code: "B", icon: "water", name: "Water", short: "Preparation, storage, carrying, safety and purification.",
     lessons: ["Daily water needs per person", "Safe storage and rotation", "Carrying water efficiently", "Purification and filtration", "Floodwater dangers"],
-    items: ["K72-WTR-001", "K72-WTR-002", "K72-WTR-003"], q: "emergency water purification methods", video: "" },
+    items: ["K72-WTR-001", "K72-WTR-003"], q: "emergency water purification methods", video: "" },
   { code: "C", icon: "food", name: "Food", short: "Emergency selection, safe storage and non-gas preparation.",
     lessons: ["Choosing ready-to-eat food", "Safe storage and expiry tracking", "Non-gas preparation methods", "Rationing across 72 hours"],
     items: ["K72-FOD-001", "K72-FOD-002", "K72-FOD-003", "K72-SRV-001", "K72-SRV-002"], q: "no cook emergency food", video: "" },
@@ -438,13 +411,13 @@ KIDAN.modules = [
     items: ["K72-MED-001"], q: "basic first aid training bleeding control", video: "" },
   { code: "E", icon: "battery", name: "Power & Light", short: "Lights, battery care, power bank and phone power.",
     lessons: ["Flashlight and headlamp use", "Battery care and storage", "Power bank optimisation", "Phone power management"],
-    items: ["K72-LGT-001", "K72-LGT-002", "K72-LGT-003", "K72-PWR-001", "K72-PWR-002", "K72-PWR-003"], q: "save phone battery power outage", video: "" },
+    items: ["K72-LGT-001", "K72-LGT-002", "K72-PWR-001", "K72-PWR-002", "K72-PWR-003"], q: "save phone battery power outage", video: "" },
   { code: "F", icon: "radio", name: "Communication", short: "Emergency channels, phone prep, radio and family protocol.",
     lessons: ["Official emergency channels", "Phone preparation", "Radio operation", "Family communication during outages"],
     items: ["K72-COM-001", "K72-COM-002", "K72-DOC-001", "K72-DOC-002"], q: "family emergency communication plan", video: "" },
   { code: "G", icon: "fire", name: "Fire & Light", short: "Safe use of fire-starting equipment and light tools.",
     lessons: ["Lighters, matches and ferro rods", "Fire safety and ventilation", "Flame safety indoors", "Light discipline in shelters"],
-    items: ["K72-SRV-003", "K72-LGT-003"], q: "fire starting safety ferro rod", video: "" },
+    items: ["K72-SRV-003"], q: "fire starting safety ferro rod", video: "" },
   { code: "H", icon: "tent", name: "Shelter & Weather", short: "Rain protection, temporary shelter, keeping gear dry.",
     lessons: ["Rain protection layers", "Setting up a tarp shelter", "Choosing a safe spot", "Keeping gear dry"],
     items: ["K72-WTH-001", "K72-WTH-002", "K72-WTH-003", "K72-WTH-004", "K72-WTH-005"], q: "emergency tarp shelter rain", video: "" },
@@ -512,3 +485,6 @@ KIDAN.icons = {
   route: '<circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h6a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h6"/>',
   play: '<path d="M7 4l13 8-13 8z" fill="currentColor" stroke="none"/>'
 };
+
+/* The Preparedness Bag holds every item (the pouch included) */
+KIDAN.bags[0].contents = ["K72-PCH-002", ...KIDAN.items.map(i => i.serial).filter(s => s !== "K72-PCH-002")];

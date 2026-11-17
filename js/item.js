@@ -7,15 +7,22 @@ function buyBox(serial, opts = {}) {
   if (!isSold(serial)) {
     const ps = pouchesOf(serial);
     return `<div class="buy-box"><span class="serial">Availability</span>
-      <p>Included with the ${ps.length ? ps.map(p => `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>`).join(" and the ") : "Go-Bag"} and the KIDAN 72 Preparedness Bag. Not sold separately.</p></div>`;
+      <p>Included with the ${ps.length ? ps.map(p => `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>`).join(" and the ") : "KIDAN 72 Preparedness Bag"}. Not sold separately.</p></div>`;
+  }
+  if (isSoldOut(serial)) {
+    return `<div class="buy-box"><span class="serial">Availability</span>
+      <div class="bag-price">Sold out</div>
+      <p>This is out of stock right now. Message us on our <a href="about.html#contact">contact page</a> to ask when it is back.</p></div>`;
   }
   return `<div class="buy-box">
     <span class="serial">${opts.label || "Price"}</span>
     <div class="bag-price">${peso(price(serial))}</div>
+    ${leftNote(serial)}
+    ${choicePicker(serial)}
     <div class="buy-row">
       <div class="qty">
         <button type="button" data-step="-1" aria-label="Decrease quantity">−</button>
-        <input id="qty" type="number" min="1" max="99" value="1" aria-label="Quantity">
+        <input id="qty" type="number" min="1" max="${stockLeft(serial) || 99}" value="1" aria-label="Quantity">
         <button type="button" data-step="1" aria-label="Increase quantity">+</button>
       </div>
       <button type="button" class="btn btn-primary" id="add-qty">Add to order</button>
@@ -67,13 +74,29 @@ function wireBuy(serial) {
   const input = document.getElementById("qty");
   if (!input) return;
   document.querySelectorAll("[data-step]").forEach(b => b.addEventListener("click", () => {
-    input.value = Math.min(99, Math.max(1, (parseInt(input.value, 10) || 1) + Number(b.dataset.step)));
+    input.value = Math.min(Number(input.max) || 99, Math.max(1, (parseInt(input.value, 10) || 1) + Number(b.dataset.step)));
   }));
-  document.getElementById("add-qty").addEventListener("click", () => {
-    const q = Math.min(99, Math.max(1, parseInt(input.value, 10) || 1));
-    Order.add(serial, q);
-    toast(`<strong>${q} × ${esc(findItem(serial).name)}</strong> added to your order. <a href="order.html">View order →</a>`);
+  const addBtn = document.getElementById("add-qty");
+  addBtn.addEventListener("click", () => {
+    const q = Math.min(Number(input.max) || 99, Math.max(1, parseInt(input.value, 10) || 1));
+    const pick = pickedFor(addBtn, serial);
+    if (isPickOut(serial, pick)) return;
+    Order.add(pick ? serial + "|" + pick : serial, q);
+    toast(`<strong>${q} × ${esc(lineName(findItem(serial), pick))}</strong> added to your order. <a href="order.html">View order →</a>`);
   });
+  // Picking a colour shows the photo of that colour (choice.photos)
+  const ch = choiceOf(serial);
+  const picker = document.querySelector(`.buy-box [data-choice-for="${CSS.escape(serial)}"]`);
+  const showPick = v => {
+    const n = choicePhotoNo(serial, v);
+    const thumb = n && document.querySelectorAll(".thumbs button")[n - 1];
+    if (thumb && thumb.getAttribute("aria-current") !== "true") thumb.click();
+  };
+  if (ch && ch.photos && picker) {
+    picker.addEventListener("change", e => showPick(e.target.value));
+    const on = picker.querySelector("input:checked");
+    if (on) showPick(on.value);
+  }
 }
 
 function notFound() {
@@ -120,9 +143,9 @@ function renderBag(bag) {
       <a href="${detailUrl(prev.serial)}"><span class="serial">← ${esc(prev.serial)}</span><strong>${esc(prev.name)}</strong></a>
       <a href="${detailUrl(next.serial)}"><span class="serial">${esc(next.serial)} →</span><strong>${esc(next.name)}</strong></a>
     </div>`;
+  wireGallery(bag);
   wireBuy(bag.serial);
   wireGroups();
-  wireGallery(bag);
 }
 
 /* ---------- Item page ---------- */
@@ -149,7 +172,7 @@ function renderItem(it) {
         <dl class="spec-table">
           <div><dt>Serial no.</dt><dd class="serial" style="color:var(--ink)">${esc(it.serial)}</dd></div>
           <div><dt>Category</dt><dd>${esc(KIDAN.categories[it.cat])}</dd></div>
-          ${pouches.length ? `<div><dt>Packed in</dt><dd>${pouches.map(p => `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>`).join(" and ")} · Preparedness Bag</dd></div>` : ""}
+          ${pouches.length ? `<div><dt>Packed in</dt><dd>${pouches.map(p => `<a href="${detailUrl(p.serial)}">${esc(p.name)}</a>`).join(" and ")}</dd></div>` : ""}
           ${it.parts && it.parts.length ? `<div><dt>Kit contents</dt><dd>${it.parts.map(esc).join(" · ")}</dd></div>` : `<div><dt>Specification</dt><dd>${esc(it.spec)}</dd></div>`}
           <div><dt>Maintenance</dt><dd>${esc(it.maintain)}</dd></div>
           ${module ? `<div><dt>Training</dt><dd><a href="training.html#module-${esc(module.code)}">Module ${esc(module.code)} · ${esc(module.name)}</a></dd></div>` : ""}
@@ -171,8 +194,8 @@ function renderItem(it) {
       <a href="${detailUrl(prev.serial)}"><span class="serial">← ${esc(prev.serial)}</span><strong>${esc(prev.name)}</strong></a>
       <a href="${detailUrl(next.serial)}"><span class="serial">${esc(next.serial)} →</span><strong>${esc(next.name)}</strong></a>
     </div>`;
-  wireBuy(it.serial);
   wireGallery(it);
+  wireBuy(it.serial);
 }
 
 /* Extra photos (photos: 2 in js/data.js → <serial>-2.jpg) shown as thumbnails */
@@ -182,8 +205,7 @@ function wireGallery(it) {
   const frame = root.querySelector(".detail .frame");
   const main = frame && frame.querySelector(".photo img");
   if (!main) return;
-  const srcs = Array.from({ length: count }, (_, i) =>
-    "assets/img/products/" + encodeURIComponent(it.serial) + (i ? "-" + (i + 1) : "") + ".jpg");
+  const srcs = Array.from({ length: count }, (_, i) => photoSrc(it.serial, i + 1));
   const strip = document.createElement("div");
   strip.className = "thumbs";
   strip.innerHTML = srcs.map((src, i) =>
@@ -195,9 +217,17 @@ function wireGallery(it) {
   strip.addEventListener("click", e => {
     const b = e.target.closest("button");
     if (!b) return;
-    main.src = b.querySelector("img").getAttribute("src");
+    showPhoto(main, b.querySelector("img").getAttribute("src"));
     strip.querySelectorAll("button").forEach(x => x.removeAttribute("aria-current"));
     b.setAttribute("aria-current", "true");
+    // a colour photo also picks that colour
+    const ch = choiceOf(it.serial);
+    const i = ch && ch.photos ? ch.photos.indexOf([...strip.children].indexOf(b) + 1) : -1;
+    const input = i >= 0 && root.querySelector(`.buy-box [data-choice-for="${CSS.escape(it.serial)}"] input[value="${CSS.escape(ch.values[i])}"]`);
+    if (input && !input.checked && !input.disabled) {
+      input.checked = true;
+      root.querySelectorAll(".buy-box [data-pick-name]").forEach(el => { el.textContent = input.value; });
+    }
   });
 }
 

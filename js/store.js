@@ -26,7 +26,7 @@ const Store = (function () {
      Icons stay in js/data.js because they are part of the design. */
   const ready = useApi
     ? getJSON("catalog.php").then(data => {
-        ["prices", "contact", "categories", "bags", "notSoldSeparately", "items", "modules", "readiness"]
+        ["prices", "contact", "brandFilm", "kitSlides", "categories", "bags", "notSoldSeparately", "items", "modules", "readiness", "photoFiles", "soldOut", "choiceOut", "stockLeft"]
           .forEach(key => { if (data[key] !== undefined) KIDAN[key] = data[key]; });
         return KIDAN;
       }).catch(err => {

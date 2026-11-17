@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@1,800;1,900&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261025b">
 </head>
 <body data-page="gobag">
   <header id="site-header"></header>
@@ -35,8 +35,8 @@
     <section class="section tight">
       <div class="wrap">
         <div class="section-head">
-          <h2>2 Bags, 1 System.</h2>
-          <p class="lede">Get the full system, or start with one pouch.</p>
+          <h2>1 Bag, 1 System.</h2>
+          <p class="lede">Everything for the first 72 hours in one big backpack, with a KIDAN Pouch inside. Black, brown or green.</p>
         </div>
         <div class="bag-lineup" id="bags"></div>
       </div>
@@ -51,9 +51,15 @@
           <p class="lede">For refills &amp; replacements.</p>
         </div>
         <div class="toolbar">
+          <div class="kit-search" role="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            <input type="search" id="kit-search" placeholder="Search by name or serial no." aria-label="Search items by name or serial number" autocomplete="off" enterkeyhint="search">
+            <button type="button" class="clear" id="kit-search-clear" aria-label="Clear search" hidden>×</button>
+          </div>
           <div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
           <span class="count" id="count"></span>
         </div>
+        <div class="search-bags" id="search-bags" hidden></div>
         <div class="catalog" id="catalog"></div>
       </div>
     </section>
@@ -68,10 +74,10 @@
 
   <footer id="site-footer"></footer>
 
-  <script src="js/config.js"></script>
-  <script src="js/data.js"></script>
-  <script src="js/store.js"></script>
-  <script src="js/site.js"></script>
-  <script src="js/gobag.js"></script>
+  <script src="js/config.js?v=20261025b"></script>
+  <script src="js/data.js?v=20261025b"></script>
+  <script src="js/store.js?v=20261025b"></script>
+  <script src="js/site.js?v=20261025b"></script>
+  <script src="js/gobag.js?v=20261025b"></script>
 </body>
 </html>

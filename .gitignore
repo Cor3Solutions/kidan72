@@ -1,1 +1,10 @@
 /assets/img/KIDAN ITEMAS
+
+# Database password (created on the server by admin/setup.php)
+/api/config.php
+
+# Photos uploaded through the admin page (they live on the server only)
+/uploads/
+
+# Original homepage video, kept on this computer only (the site uses the smaller copy)
+/assets/video/_original/

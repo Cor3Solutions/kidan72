@@ -3,6 +3,7 @@
 Store.ready.then(() => {
   const bags = document.getElementById("bags");
   bags.innerHTML = KIDAN.bags.map(bagCard).join("");
+  bags.classList.toggle("single", KIDAN.bags.length === 1);
   swipeDots(bags);
   setUpBrandFilm();
 });

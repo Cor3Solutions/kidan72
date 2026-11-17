@@ -33,7 +33,7 @@ function findItem(serial) {
   return KIDAN.items.find(i => i.serial === serial);
 }
 
-/* Which pouches an item is packed in (some items are in both) */
+/* Which bags an item is packed in */
 function pouchesOf(serial) {
   return KIDAN.bags.filter(b => b.contents && b.contents.includes(serial));
 }
@@ -43,6 +43,50 @@ function pouchOf(serial) { return pouchesOf(serial)[0]; }
 function packingCount(bag) {
   if (bag.includes) return bag.includes.reduce((n, sn) => n + packingCount(findBag(sn)), 0);
   return (bag.contents || []).length;
+}
+
+/* ---------- Choices (e.g. pouch colour) ----------
+   A product with "choice": { label, values, photos? } asks the customer
+   to pick one value (e.g. Black or Brown) before it goes on the order.
+   In the order list the line is kept as "SERIAL|Value". */
+const SWATCH = { black: "#1B1A18", brown: "#8A6E4B", coyote: "#8A6E4B", tan: "#B79C74", green: "#4E5A32", olive: "#4E5A32" };
+function choiceOf(serial) { const it = findItem(serial); return it && it.choice && (it.choice.values || []).length ? it.choice : null; }
+function splitKey(key) { const i = String(key).indexOf("|"); return i < 0 ? [String(key), ""] : [key.slice(0, i), key.slice(i + 1)]; }
+function lineName(item, pick) { return item.name + (pick ? ` (${pick})` : ""); }
+
+/* The value picked at first: the first one not sold out */
+function defaultPick(serial) {
+  const ch = choiceOf(serial);
+  return ch ? (ch.values.find(v => !isPickOut(serial, v)) || ch.values[0]) : "";
+}
+/* The photo that shows a value (choice.photos), or null */
+function choicePhotoNo(serial, pick) {
+  const ch = choiceOf(serial);
+  if (!ch || !ch.photos || !pick) return null;
+  const i = ch.values.findIndex(v => v.toLowerCase() === String(pick).toLowerCase());
+  return i >= 0 && ch.photos[i] ? ch.photos[i] : null;
+}
+
+let choiceSeq = 0;
+function choicePicker(serial, opts = {}) {
+  const ch = choiceOf(serial);
+  if (!ch) return "";
+  const name = "pick-" + serial + "-" + (++choiceSeq);
+  const first = defaultPick(serial);
+  // Colours as round swatches (big pickers); small pickers stay compact buttons
+  const swatches = !opts.small && ch.values.every(v => SWATCH[v.toLowerCase()]);
+  return `<fieldset class="choice-pick${opts.small ? " small" : ""}${swatches ? " swatches" : ""}" data-choice-for="${esc(serial)}">
+    <legend>${esc(ch.label)}${swatches ? `<b data-pick-name>${esc(first)}</b>` : ""}</legend>
+    ${ch.values.map(v => { const out = isPickOut(serial, v); return `<label${out ? ' class="out"' : ""}><input type="radio" name="${esc(name)}" value="${esc(v)}"${v === first ? " checked" : ""}${out ? " disabled" : ""}>
+      <span><i style="background:${SWATCH[v.toLowerCase()] || "#ccc"}" aria-hidden="true"></i>${esc(v)}${out ? ` <small>sold out</small>` : ""}</span></label>`; }).join("")}
+  </fieldset>${findBag(serial) && swatches ? `<p class="pick-note">The KIDAN Pouch inside comes in the same colour: <b data-pick-name>${esc(first)}</b></p>` : ""}`;
+}
+/* The value picked next to an add button ("" when the product has no choice) */
+function pickedFor(btn, serial) {
+  if (!choiceOf(serial)) return "";
+  const box = btn.closest("article, .buy-box, .bag-card, .detail-info");
+  const on = box && box.querySelector(`[data-choice-for="${CSS.escape(serial)}"] input:checked`);
+  return on ? on.value : (choiceOf(serial).values.find(v => !isPickOut(serial, v)) || choiceOf(serial).values[0]);
 }
 
 function bagContents(bag) {
@@ -58,8 +102,19 @@ function price(serial) {
 }
 
 function peso(amount) {
-  return amount == null ? "PHP xx" : "PHP " + amount.toLocaleString("en-PH", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  if (amount == null) return "Price to follow";
+  // Whole pesos: "PHP 4,500". With centavos, always two digits: "PHP 180.50"
+  const cents = Math.round(amount * 100) % 100 !== 0;
+  return "PHP " + amount.toLocaleString("en-PH", { minimumFractionDigits: cents ? 2 : 0, maximumFractionDigits: 2 });
 }
+
+/* Sold out (switched on per product in the admin page) */
+function isSoldOut(serial) { return (KIDAN.soldOut || []).includes(serial); }
+/* Stock (from the admin's Stock page): colours that are out, and "only N left" */
+function choiceOut(serial) { return (KIDAN.choiceOut && KIDAN.choiceOut[serial]) || []; }
+function isPickOut(serial, pick) { return !!pick && choiceOut(serial).some(v => v.toLowerCase() === String(pick).toLowerCase()); }
+function stockLeft(serial) { const n = KIDAN.stockLeft && KIDAN.stockLeft[serial]; return typeof n === "number" && n > 0 ? n : null; }
+function leftNote(serial) { const n = stockLeft(serial); return n ? `<span class="stock-left">Only ${n} left</span>` : ""; }
 
 /* ---------- Video popup (YouTube embedded on the site) ----------
    Paste a normal YouTube link in js/data.js ("video": "...").
@@ -216,15 +271,24 @@ document.addEventListener("click", e => {
 
 function detailUrl(serial) { return "item.html?sn=" + encodeURIComponent(serial); }
 
+/* Photo n of a bag or item. Normally assets/img/products/<serial>.jpg
+   (or <serial>-2.jpg ...). With the database switched on, a photo
+   uploaded in the admin page is used instead (KIDAN.photoFiles). */
+function photoSrc(serial, n = 1) {
+  const up = KIDAN.photoFiles && KIDAN.photoFiles[serial];
+  if (up && up[n - 1]) return up[n - 1];
+  return "assets/img/products/" + encodeURIComponent(serial) + (n > 1 ? "-" + n : "") + ".jpg";
+}
+
 /* Photo slot. Shows assets/img/products/<serial>.jpg when present,
    otherwise a specimen plate with the item's icon. */
-function photoSlot(serial, iconName, extraClass = "") {
+function photoSlot(serial, iconName, extraClass = "", pick = defaultPick(serial)) {
   // photo: false in js/data.js hides an item's photo (e.g. while a new one is being taken)
   const it = findItem(serial);
   const hidden = it && it.photo === false;
   return `<div class="photo ${extraClass}${hidden ? " no-photo" : ""}">
     <span class="sn-badge">${esc(serial)}</span>
-    ${hidden ? "" : `<img src="assets/img/products/${encodeURIComponent(serial)}.jpg" alt="" loading="lazy" onerror="this.closest('.photo').classList.add('no-photo')">`}
+    ${hidden ? "" : `<img src="${esc(photoSrc(serial, choicePhotoNo(serial, pick) || 1))}" alt="" loading="lazy" onerror="this.closest('.photo').classList.add('no-photo')">`}
     <span class="ticks"></span>
     <span class="placeholder">${icon(iconName)}<small>Photo coming soon</small></span>
   </div>`;
@@ -245,17 +309,18 @@ function itemCard(item) {
       ${item.short ? `<p>${esc(item.short)}</p>` : ""}
       <div class="item-foot">
         <span class="serial">${esc(item.serial)}</span>
-        <span class="price">${isSold(item.serial) ? peso(price(item.serial)) : "Bag only"}</span>
+        <span class="price${isSold(item.serial) && !isSoldOut(item.serial) && price(item.serial) == null ? " tbc" : ""}">${!isSold(item.serial) ? "Bag only" : isSoldOut(item.serial) ? "Sold out" : peso(price(item.serial))}</span>
       </div>
+      ${isSold(item.serial) && !isSoldOut(item.serial) ? leftNote(item.serial) + choicePicker(item.serial, { small: true }) : ""}
       <div class="item-actions">
         <a class="link-more" href="${detailUrl(item.serial)}">Details →</a>
-        ${isSold(item.serial) ? `<button type="button" class="btn-mini" data-add="${esc(item.serial)}">+ Add</button>` : ""}
+        ${isSold(item.serial) && !isSoldOut(item.serial) ? `<button type="button" class="btn-mini" data-add="${esc(item.serial)}">+ Add</button>` : ""}
       </div>
     </div>
   </article>`;
 }
 
-/* Card for one of the three bags */
+/* Card for a bag */
 function bagCard(bag) {
   const count = packingCount(bag);
   return `<article class="bag-card${bag.includes ? " featured" : ""}">
@@ -265,9 +330,12 @@ function bagCard(bag) {
       <h3><a href="${detailUrl(bag.serial)}">${esc(bag.name)}</a></h3>
       <p>${esc(bag.short)}</p>
       <div class="bag-meta"><span class="serial">${esc(bag.serial)}</span><span class="serial">${count} items</span></div>
-      <div class="bag-price">${peso(price(bag.serial))}</div>
+      <div class="bag-price">${isSoldOut(bag.serial) ? "Sold out" : peso(price(bag.serial))}</div>
+      ${isSoldOut(bag.serial) ? "" : leftNote(bag.serial) + choicePicker(bag.serial)}
       <div class="bag-actions">
-        <button type="button" class="btn btn-primary" data-add="${esc(bag.serial)}">Add to order</button>
+        ${isSoldOut(bag.serial)
+          ? `<span class="btn btn-ghost is-disabled" aria-disabled="true">Sold out</span>`
+          : `<button type="button" class="btn btn-primary" data-add="${esc(bag.serial)}">Add to order</button>`}
         <a class="btn btn-ghost" href="${detailUrl(bag.serial)}">View contents</a>
       </div>
     </div>
@@ -285,12 +353,29 @@ const Order = {
     try { localStorage.setItem(this.KEY, JSON.stringify(o)); } catch (e) { /* storage unavailable */ }
     document.dispatchEvent(new CustomEvent("order:change"));
   },
-  add(sn, qty = 1) { const o = this.read(); o[sn] = (o[sn] || 0) + qty; this.write(o); },
-  set(sn, qty) { const o = this.read(); if (qty > 0) o[sn] = qty; else delete o[sn]; this.write(o); },
+  // key: a serial number, or "SERIAL|Value" for a product with a choice
+  add(key, qty = 1) { const o = this.read(); o[key] = Math.min(99, (o[key] || 0) + qty); this.write(o); },
+  set(key, qty) { const o = this.read(); if (qty > 0) o[key] = qty; else delete o[key]; this.write(o); },
+  /* Change the choice of a line (e.g. Black → Brown); merges with an existing line */
+  rechoose(key, pick) {
+    const o = this.read();
+    const qty = o[key]; if (!qty) return;
+    delete o[key];
+    const nk = splitKey(key)[0] + (pick ? "|" + pick : "");
+    o[nk] = Math.min(99, (o[nk] || 0) + qty);
+    this.write(o);
+  },
   clear() { this.write({}); },
   lines() {
     const o = this.read();
-    return Object.keys(o).filter(sn => findItem(sn)).map(sn => ({ sn, qty: o[sn], item: findItem(sn), unit: price(sn) }));
+    return Object.keys(o).map(key => {
+      const [sn, raw] = splitKey(key);
+      const item = findItem(sn);
+      if (!item) return null;                       // no longer sold
+      const ch = choiceOf(sn);
+      const pick = ch ? (ch.values.find(v => v.toLowerCase() === raw.toLowerCase()) || "") : "";
+      return { key, sn, pick, needsPick: !!ch && !pick, qty: o[key], item, name: lineName(item, pick), unit: price(sn) };
+    }).filter(Boolean);
   },
   count() { return this.lines().reduce((n, l) => n + l.qty, 0); },
   total() {
@@ -328,12 +413,51 @@ document.addEventListener("click", e => {
   if (!btn) return;
   e.preventDefault();
   const sn = btn.dataset.add;
-  Order.add(sn, 1);
+  if (isSoldOut(sn)) return;
   const it = findItem(sn);
   if (!it) return;
-  toast(`<strong>${esc(it.name)}</strong> added to your order. <a href="order.html">View order →</a>`);
+  const pick = pickedFor(btn, sn);
+  if (isPickOut(sn, pick)) return;
+  Order.add(pick ? sn + "|" + pick : sn, 1);
+  toast(`<strong>${esc(lineName(it, pick))}</strong> added to your order. <a href="order.html">View order →</a>`);
 });
 document.addEventListener("order:change", updateOrderBadge);
+
+/* Picking a colour on a card shows the photo in that colour.
+   (The detail page with photo thumbnails handles this in item.js.) */
+function showPhoto(img, src) {
+  if (!img || img.getAttribute("src") === src) return;
+  const box = img.closest(".photo");
+  const pre = new Image();
+  img.classList.add("swapping");
+  const done = () => {
+    img.src = src;
+    if (box) box.classList.remove("no-photo");
+    requestAnimationFrame(() => img.classList.remove("swapping"));
+  };
+  pre.onload = done;
+  pre.onerror = done;
+  pre.src = src;
+}
+document.addEventListener("change", e => {
+  const input = e.target;
+  const set = input.closest && input.closest("[data-choice-for]");
+  if (!set || input.type !== "radio") return;
+  const serial = set.dataset.choiceFor;
+  const box = set.closest(".detail, article");
+  (box || set).querySelectorAll("[data-pick-name]").forEach(el => { el.textContent = input.value; });
+  if (!box || box.querySelector(".thumbs")) return;
+  const n = choicePhotoNo(serial, input.value);
+  if (n) showPhoto(box.querySelector(".photo img"), photoSrc(serial, n));
+});
+/* Load the other colour photos once someone points at a colour picker */
+document.addEventListener("pointerover", e => {
+  const set = e.target.closest && e.target.closest("[data-choice-for]:not([data-preloaded])");
+  if (!set) return;
+  set.dataset.preloaded = "1";
+  const ch = choiceOf(set.dataset.choiceFor);
+  (ch && ch.photos || []).forEach(n => { new Image().src = photoSrc(set.dataset.choiceFor, n); });
+});
 
 /* ---------- Header & footer ---------- */
 function buildHeader() {
@@ -374,20 +498,20 @@ function buildFooter() {
           <img src="assets/img/kidan72-logo-light.png" alt="KIDAN 72 — Always Ready.">
           <p>A practical readiness system built for the first 72 hours after a major disruption.</p>
         </div>
-        <div><h4>Shop</h4><ul>
+        <div><h2 class="foot-h">Shop</h2><ul>
           <li><a href="item.html?sn=K72-BAG-000">Preparedness Bag</a></li>
-          <li><a href="item.html?sn=K72-BAG-001">KIDAN Black</a></li>
-          <li><a href="item.html?sn=K72-BAG-002">KIDAN Brown</a></li>
+          <li><a href="item.html?sn=K72-PCH-001">KIDAN Pouch</a></li>
           <li><a href="gobag.html#items">Individual items</a></li>
           <li><a href="order.html">My Order</a></li>
+          <li><a href="track.html">Track my order</a></li>
         </ul></div>
-        <div><h4>Prepare</h4><ul>
+        <div><h2 class="foot-h">Prepare</h2><ul>
           <li><a href="system.html">About</a></li>
           <li><a href="training.html">Training Modules</a></li>
           <li><a href="readiness.html">Community</a></li>
           <li><a href="system.html#family">Family System</a></li>
         </ul></div>
-        <div><h4>KIDAN 72</h4><ul>
+        <div><h2 class="foot-h">KIDAN 72</h2><ul>
           <li><a href="system.html">About KIDAN 72</a></li>
           <li><a href="about.html#contact">Contact</a></li>
           <li><a href="system.html#typhoon">Typhoon System</a></li>

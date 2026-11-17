@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Track my order — KIDAN 72</title>
+  <meta name="description" content="Check the status of your KIDAN 72 order.">
+  <meta name="robots" content="noindex">
+  <meta property="og:title" content="Track my order — KIDAN 72">
+  <meta property="og:description" content="KIDAN 72 — a Philippine typhoon and flood preparedness system. Always Ready.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#F5F0E7">
+  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@1,800;1,900&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css?v=20261025b">
+</head>
+<body data-page="order">
+  <header id="site-header"></header>
+
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="order.html">My Order</a> / Track</nav>
+        <span class="eyebrow">Order status</span>
+        <h1>Track my order</h1>
+        <p class="lede">See where your order is, from received to delivered.</p>
+      </div>
+    </section>
+
+    <section class="section tight">
+      <div class="wrap">
+        <form id="track-form" class="track-form" novalidate>
+          <div class="field"><label for="t-order">Order number *</label><input id="t-order" name="order" placeholder="K72-0001" autocapitalize="characters" required></div>
+          <div class="field"><label for="t-mobile">Mobile number used for the order *</label><input id="t-mobile" name="mobile" type="tel" autocomplete="tel" placeholder="09XX XXX XXXX" required></div>
+          <button type="submit" class="btn btn-primary">Show my order</button>
+          <p class="fineprint" id="track-msg" role="alert"></p>
+        </form>
+        <div id="track-result" hidden></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/config.js?v=20261025b"></script>
+  <script src="js/data.js?v=20261025b"></script>
+  <script src="js/store.js?v=20261025b"></script>
+  <script src="js/site.js?v=20261025b"></script>
+  <script src="js/track.js?v=20261025b"></script>
+</body>
+</html>

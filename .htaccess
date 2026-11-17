@@ -1,0 +1,49 @@
+# KIDAN 72 — web server settings (used on PHP hosts such as Hostinger and
+# by XAMPP; Vercel ignores this file).
+
+# Item pages get their own Facebook / Messenger link preview:
+# item.html?sn=K72-... is answered by item.php, which serves the same page
+# with that item's title, description and photo filled in.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{QUERY_STRING} (^|&)sn= [NC]
+  RewriteCond %{REQUEST_URI}::$0 ^(/.*)item\.html::item\.html$
+  RewriteRule ^item\.html$ %1item.php [L]
+
+  # robots.txt and sitemap.xml are made by api/seo.php (always the right address)
+  RewriteRule ^robots\.txt$ api/seo.php?f=robots [L]
+  RewriteRule ^sitemap\.xml$ api/seo.php?f=sitemap [L]
+</IfModule>
+
+# A friendly "page not found" page instead of the host's default
+ErrorDocument 404 /404.html
+
+# No folder listings
+Options -Indexes
+
+# Pages, scripts and styles: browsers check for a newer copy on every visit
+# (a quick "not changed" answer when nothing changed), so site updates show
+# straight away. Photos and videos keep the host's normal long caching.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|js|css|json)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# Notes for whoever edits the site are not for the public
+<FilesMatch "^(README\.txt|.*\.md)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+
+# Basic protection: no showing the site inside other sites' frames,
+# no guessing file types, and no sending full page addresses to other sites.
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), payment=()"
+</IfModule>
+
+AddType application/manifest+json .webmanifest
